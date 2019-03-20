@@ -4,4 +4,6 @@
  | CMPUT 275, Winter 2019                                                    | 
  | Final Project: Pac Man on Arduino                                         |
 /^---------------------------------------------------------------------------*/
-/* Shared & Global Variables */
+/* Shared Objects & Global Variables */
+
+#include <Arduino.h>

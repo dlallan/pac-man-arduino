@@ -5,5 +5,19 @@
  | Final Project: Pac Man on Arduino                                         |
 /^---------------------------------------------------------------------------*/
 /* All pin definitions can be places here */
+#ifndef PINOUT_H
+#define PINOUT_H
+
+#include <Arduino.h>
 
 /* Display Wiring */
+// ...
+
+/* Joystick Wiring */
+// ...
+
+/* Other stuff */
+// ...
+
+
+#endif
