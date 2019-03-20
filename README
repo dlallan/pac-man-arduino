@@ -1,0 +1,66 @@
+-----------------------------------------------------------
+Names: Amir Hansen & Dillon Allan
+ID: <Amir's ID here>, 1350542
+CMPUT 275, Winter 2019
+
+Final Project: Pac-Man Arduino
+-----------------------------------------------------------
+Included Files:
+    * Makefile
+    * README
+
+Accessories:
+    * Arduino Mega Board
+    * Breadboard
+    * USB cable
+    * Wires with pin connectors
+    * Adafruit ILI9341 Touchscreen Display 
+      (with SD card containing yeg pictures)
+    * Joystick
+
+Notes and Assumptions:
+    <Put program overview here.>
+
+Wiring Instructions:
+    <Just left as default wiring in class WITHOUT touch pins.>
+    <We could add touch pins or use joystick click for pause toggle?>
+
+    TFT Display:
+
+        The display pins are numbered left to right in this document when they 
+        are being viewed with their labels showing rightside up. Note you do 
+        not require the touchscreen for this assignment, so it is probably a 
+        lot easier to not wire the Y+/X+/Y-/X- pins.
+
+        Display Pin     Arduino Mega Pin
+        1 GND           BB GND bus
+        2 Vin           BB Vcc (+ive) bus
+
+        4 CLK           Pin 52
+        5 MISO          Pin 50
+        6 MOSI          Pin 51
+        7 CS            Pin 10
+        8 D/C           Pin 9
+
+        19 CCS          Pin 6
+
+    Zoom in and out buttons:
+
+        Button          Arduino Mega Pin
+        Zoom In         Pin 2
+        Zoom Out        Pin 3
+
+    Joystick connections:
+
+        Joystick Pin    Arduino Mega Pin
+        +5v             Vcc
+        GND             GND
+        VRx             Analog 1
+        VRy             Analog 0
+        SW              Pin 8
+
+Running Instructions:
+    <Put list of instructions here.>
+
+References (for both server and client):
+    <Put descriptions+links here>
