@@ -10,9 +10,12 @@
 
 #include <Arduino.h>
 #include <SPI.h>				            // must include this here (or else IDE can't find it)
+// WARNING: PDQ library must only be included ONCE in your project to avoid
+// linker errors!
 #include <PDQ_GFX.h>		            // AF: Core graphics library
 #include "PDQ_ILI9341_config.h"			// PDQ: ILI9341 pins and other setup for this sketch
 #include <PDQ_ILI9341.h>		        // AF: Hardware-specific library
+
 // contains properties of tft screen
 struct display {
     // pixel dimensions of tft display
@@ -34,12 +37,11 @@ struct infoBar {
     
     // top left corner
     static const int16_t barX = display::padding;
-    // static const barY = display::padding + 
+    static const int16_t barY = display::padding;
 };
 
 // contains properties of game map
 struct mapData {
-    
     static const int8_t mapWidth = 28; // map width in tiles
     static const int8_t mapHeight = 31; // map height in tiles
     
@@ -52,67 +54,69 @@ struct mapData {
 
     // 2D Array for level map (left half only)
     // 0 indicates wall
-    // 1 indicates path
-    // TODO: see if this array can be made static and const
-    bool mapLayout[mapHeight][mapWidth/2] = { 
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // top row
-        {0,1,1,1,1,1,1,1,1,1,1,1,1,0},
-        {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-        {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-        {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-        {0,1,1,1,1,1,1,1,1,1,1,1,1,1}, 
-        {0,1,0,0,0,0,1,0,0,1,0,0,0,0}, 
-        {0,1,0,0,0,0,1,0,0,1,0,0,0,0}, 
-        {0,1,1,1,1,1,1,0,0,1,1,1,1,0}, 
-        {0,0,0,0,0,0,1,0,0,0,0,0,1,0},  
-        {0,0,0,0,0,0,1,0,0,0,0,0,1,0},  
-        {0,0,0,0,0,0,1,0,0,1,1,1,1,1}, 
-        {0,0,0,0,0,0,1,0,0,1,0,0,0,1}, // top of ghost box 
-        {0,0,0,0,0,0,1,0,0,1,0,1,1,1},  
-        {1,1,1,1,1,1,1,1,1,1,0,1,1,1},
-        {0,0,0,0,0,0,1,0,0,1,0,1,1,1},
-        {0,0,0,0,0,0,1,0,0,1,0,0,0,0}, // bottom of ghost box
-        {0,0,0,0,0,0,1,0,0,1,1,1,1,1}, 
-        {0,0,0,0,0,0,1,0,0,1,0,0,0,0}, 
-        {0,0,0,0,0,0,1,0,0,1,0,0,0,0}, 
-        {0,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
-        {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-        {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-        {0,1,1,1,0,0,1,1,1,1,1,1,1,1}, 
-        {0,0,0,1,0,0,1,0,0,1,0,0,0,0}, 
-        {0,0,0,1,0,0,1,0,0,1,0,0,0,0}, 
-        {0,1,1,1,1,1,1,0,0,1,1,1,1,0}, 
-        {0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
-        {0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
-        {0,1,1,1,1,1,1,1,1,1,1,1,1,1}, 
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // bottom row
-    };
+    // 1 indicates path or foreground
+    static const bool mapLayout[][mapWidth/2];
 
     // draw map foreground to tft screen
-    // TODO: see if this method can be made static
-    void drawMap(PDQ_ILI9341 * tft) {
-        // fill background
-        tft->fillRect(mapStartX, mapStartY, mapWidth*display::tileSize, mapHeight*display::tileSize, bgColor);
-        for (int16_t r = 0; r < mapHeight; ++r) {
-            // left half
-            Serial.print("drawing row ");
-            Serial.println(r);
-            for (int16_t c = 0; c < mapWidth/2; ++c) {
-                if (this->mapLayout[r][c]) { // draw path/foreground
-                    tft->fillRect(mapStartX + c*display::tileSize, mapStartY + r*display::tileSize, 
-                        display::tileSize, display::tileSize, pathColor);
-                }
-            }
+    static void drawMap(PDQ_ILI9341 * tft);    
+};
 
-            // right half
-            for (int16_t c = mapWidth/2 - 1; c >= 0; --c) {
-                if (this->mapLayout[r][c]) { // draw path/foreground
-                    tft->fillRect(mapStartX + (mapWidth-c-1)*display::tileSize, mapStartY + r*display::tileSize, 
-                        display::tileSize, display::tileSize, pathColor);
-                }
+
+/* static */const bool mapData::mapLayout[][mapWidth/2] = { 
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // top row
+    {0,1,1,1,1,1,1,1,1,1,1,1,1,0},
+    {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
+    {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
+    {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
+    {0,1,1,1,1,1,1,1,1,1,1,1,1,1}, 
+    {0,1,0,0,0,0,1,0,0,1,0,0,0,0}, 
+    {0,1,0,0,0,0,1,0,0,1,0,0,0,0}, 
+    {0,1,1,1,1,1,1,0,0,1,1,1,1,0}, 
+    {0,0,0,0,0,0,1,0,0,0,0,0,1,0},  
+    {0,0,0,0,0,0,1,0,0,0,0,0,1,0},  
+    {0,0,0,0,0,0,1,0,0,1,1,1,1,1}, 
+    {0,0,0,0,0,0,1,0,0,1,0,0,0,1}, // top of ghost box 
+    {0,0,0,0,0,0,1,0,0,1,0,1,1,1},  
+    {1,1,1,1,1,1,1,1,1,1,0,1,1,1},
+    {0,0,0,0,0,0,1,0,0,1,0,1,1,1},
+    {0,0,0,0,0,0,1,0,0,1,0,0,0,0}, // bottom of ghost box
+    {0,0,0,0,0,0,1,0,0,1,1,1,1,1}, 
+    {0,0,0,0,0,0,1,0,0,1,0,0,0,0}, 
+    {0,0,0,0,0,0,1,0,0,1,0,0,0,0}, 
+    {0,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
+    {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
+    {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
+    {0,1,1,1,0,0,1,1,1,1,1,1,1,1}, 
+    {0,0,0,1,0,0,1,0,0,1,0,0,0,0}, 
+    {0,0,0,1,0,0,1,0,0,1,0,0,0,0}, 
+    {0,1,1,1,1,1,1,0,0,1,1,1,1,0}, 
+    {0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
+    {0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
+    {0,1,1,1,1,1,1,1,1,1,1,1,1,1}, 
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // bottom row
+};
+
+/* static  */void mapData::drawMap(PDQ_ILI9341 * tft) {
+    // fill background
+    tft->fillRect(mapStartX, mapStartY, mapWidth*display::tileSize, mapHeight*display::tileSize, bgColor);
+    for (int16_t r = 0; r < mapHeight; ++r) {
+        // left half
+        Serial.print("drawing row ");
+        Serial.println(r);
+        for (int16_t c = 0; c < mapWidth/2; ++c) {
+            if (/* this-> */mapLayout[r][c]) { // draw path/foreground
+                tft->fillRect(mapStartX + c*display::tileSize, mapStartY + r*display::tileSize, 
+                    display::tileSize, display::tileSize, pathColor);
             }
         }
-    };
-    
+
+        // right half
+        for (int16_t c = mapWidth/2 - 1; c >= 0; --c) {
+            if (/* this-> */mapLayout[r][c]) { // draw path/foreground
+                tft->fillRect(mapStartX + (mapWidth-c-1)*display::tileSize, mapStartY + r*display::tileSize, 
+                    display::tileSize, display::tileSize, pathColor);
+            }
+        }
+    }
 };
 #endif
