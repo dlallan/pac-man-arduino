@@ -16,7 +16,6 @@ void setup()
   /* The final product doesnt need serial com's its just going to be useful 
      for debugging */
   Serial.begin(9600);   // Start serial session at 9600 baud rate
-  Serial.println("Hello World!");
   tft.begin();
 
   display::drawBackground(&tft);
