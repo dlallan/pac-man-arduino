@@ -15,6 +15,7 @@ Remaining Tasks
         - animations for ghosts
             - Draw colored squares
             - ghosts turn blue when pac-man eats power pellet
+        - erase trail
     
     Pac-Man movement
         - 4 orientations
