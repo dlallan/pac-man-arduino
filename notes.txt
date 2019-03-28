@@ -1,0 +1,58 @@
+Remaining Tasks
+    Controls
+        - Joystick controls
+            - Main game
+            - Start menu
+            - Pause menu
+            - Game Over goes back to Start menu 
+
+    Graphics
+        - Start menu
+        - Pause menu (stop timer, wait for joystick click)
+        - Game Over message w/ score
+        - animations for pac-man
+            - Draw a yellow circle
+        - animations for ghosts
+            - Draw colored squares
+            - ghosts turn blue when pac-man eats power pellet
+    
+    Pac-Man movement
+        - 4 orientations
+        - constant speed (can't stop unless at wall)
+        - get current tile from center of pac-man
+
+    Ghost movement
+        - A* or Dijkstra
+        - Ghost house at start 
+            - 3 inside, 1 (red) outside
+            - time release or points-based release mechanism?
+        - Each ghost uses pathfinding algorithm to determine next tile
+        - use simplified graph from website
+        - see http://gameinternals.com/post/2072558330/understanding-pac-man-ghost-behavior
+          for details.
+        - Cannot reverse direction unless switching between modes
+        - use Level 1 phases on website
+        - Scatter mode
+            - fixed "home" tile for each ghost OFFSCREEN (see image in link)
+            - each ghost uses their own pathfinding AI to reach home
+                - results in loop behavior in four corners
+        - Chase mode (in order of exiting ghost house)
+            - Red (outside initially)
+                - target tile: Pac-Man's current tile
+            - Pink
+                - exits immediately
+                - target tile: 4 tiles ahead of Pac-man 
+            - Blue
+                - exits after >= 30 dots consumed
+                - target tile: see website
+            - Orange
+                - exits after >= 1/3 dots are consumed
+                - Use Red targeting if distance from Pac-Man > 8 tiles
+                - Use Scatter mode targeting if distance from Pac-man <= 8 tiles
+
+        - Frightened mode
+            - at an intersection, pseudorandomly decide next turn
+
+    Documentation 
+        - README
+        - Comments
