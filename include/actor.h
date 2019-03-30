@@ -16,7 +16,7 @@ class Actor {
     Actor();
     ~Actor();
     void action();
-    void draw();
+    objectInfo draw();
   protected:
     objectInfo obj;
 };

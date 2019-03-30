@@ -21,7 +21,6 @@
 
 /// struct and class definitions
 #include "controller.h"
-
 Controller *con;
 
 // contains properties of tft screen
