@@ -43,10 +43,17 @@ void setup() {
   con = new Controller();
 }
 
+void update()
+{
+  
+}
+
+void draw()
+{
+
+}
 // main loop for game runtime
 bool running() {
-  con->getDirection();
-  con->buttonTriggered();
   return true;
 }
 

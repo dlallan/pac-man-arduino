@@ -21,7 +21,6 @@
 
 /// struct and class definitions
 #include "controller.h"
-
 Controller *con;
 
 // contains properties of tft screen
@@ -81,7 +80,7 @@ struct MapData {
 
   // 2D Array for level map (left half only)
   // uses mapStates to define initial layout
-  static /* const */ uint8_t mapLayout[mapHeight][mapWidth/2];
+  static uint8_t mapLayout[][mapWidth];
 
   // set initial map state
   static void initMapLayout();
@@ -100,6 +99,8 @@ struct MapData {
 
   // draw white "door" on ghost box
   static void drawGhostDoor(PDQ_ILI9341 * tft, uint16_t x, uint16_t y);
+
+  static void drawTile(PDQ_ILI9341 * tft, int8_t r, int8_t c);
 };
 
 // contains properties for ghosts
@@ -190,38 +191,38 @@ class GhostShape : public DynamicShape {
 /* static */ const Coordinates GhostData::orangeInitialPos = {(X_BOUND/2 +2)* 
   SCALE + SCALE/2, 18*SCALE};
 
-/* static */ uint8_t MapData::mapLayout[][mapWidth/2] = { 
-  {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // top row
-  {0,1,1,1,1,1,1,1,1,1,1,1,1,0},
-  {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-  {0,2,0,4,4,0,1,0,4,4,4,0,1,0}, 
-  {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-  {0,1,1,1,1,1,1,1,1,1,1,1,1,1}, 
-  {0,1,0,0,0,0,1,0,0,1,0,0,0,0}, 
-  {0,1,0,0,0,0,1,0,0,1,0,0,0,0}, 
-  {0,1,1,1,1,1,1,0,0,1,1,1,1,0}, 
-  {0,0,0,0,0,0,1,0,0,0,0,0,3,0},  
-  {4,4,4,4,4,0,1,0,0,0,0,0,3,0},  
-  {4,4,4,4,4,0,1,0,0,3,3,3,3,3}, 
-  {4,4,4,4,4,0,1,0,0,3,0,0,0,4}, // top of ghost box 
-  {0,0,0,0,0,0,1,0,0,3,0,4,4,4},  
-  {3,3,3,3,3,3,1,3,3,3,0,4,4,4},
-  {0,0,0,0,0,0,1,0,0,3,0,4,4,4},
-  {4,4,4,4,4,0,1,0,0,3,0,0,0,0}, // bottom of ghost box
-  {4,4,4,4,4,0,1,0,0,3,3,3,3,3}, 
-  {4,4,4,4,4,0,1,0,0,3,0,0,0,0}, 
-  {0,0,0,0,0,0,1,0,0,3,0,0,0,0}, 
-  {0,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
-  {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-  {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-  {0,2,1,1,0,0,1,1,1,1,1,1,1,3}, 
-  {0,0,0,1,0,0,1,0,0,1,0,0,0,0}, 
-  {0,0,0,1,0,0,1,0,0,1,0,0,0,0}, 
-  {0,1,1,1,1,1,1,0,0,1,1,1,1,0}, 
-  {0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
-  {0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
-  {0,1,1,1,1,1,1,1,1,1,1,1,1,1}, 
-  {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // bottom row
+/* static */ uint8_t MapData::mapLayout[][mapWidth] = { 
+  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // top row
+  {0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0},
+  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
+  {0,2,0,4,4,0,1,0,4,4,4,0,1,0,0,1,0,4,4,4,0,1,0,4,4,0,2,0}, 
+  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
+  {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
+  {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
+  {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
+  {0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0}, 
+  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0},  
+  {0,1,0,4,4,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,4,4,0,1,0},  
+  {0,1,0,0,4,0,1,0,0,1,1,1,1,3,3,1,1,1,1,0,0,1,0,4,0,0,1,0}, 
+  {0,1,1,0,4,0,1,0,0,1,0,0,0,4,4,0,0,0,1,0,0,1,0,4,0,1,1,0}, // top of ghost box 
+  {0,0,1,0,0,0,1,0,0,1,0,4,4,4,4,4,4,0,1,0,0,1,0,0,0,1,0,0},  
+  {4,0,1,1,2,1,1,1,1,1,0,4,4,4,4,4,4,0,1,1,1,1,1,2,1,1,0,4},
+  {0,0,1,0,0,0,1,0,0,1,0,4,4,4,4,4,4,0,1,0,0,1,0,0,0,1,0,0},
+  {0,1,1,0,4,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,4,0,1,1,0}, // bottom of ghost box
+  {0,1,0,0,4,0,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,0,4,0,0,1,0}, 
+  {0,1,0,4,4,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,4,4,0,1,0}, 
+  {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
+  {0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
+  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
+  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
+  {0,2,1,1,0,0,1,1,1,1,1,1,1,3,3,1,1,1,1,1,1,1,0,0,1,1,2,0}, 
+  {0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0}, 
+  {0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0}, 
+  {0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0}, 
+  {0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
+  {0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
+  {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
+  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // bottom row
 };
 
 // /* static */ void MapData::initMapLayout() {
@@ -294,15 +295,9 @@ class GhostShape : public DynamicShape {
 }
 
 
-/* static  */void MapData::drawMap(PDQ_ILI9341 * tft) {
-  // fill background
-  tft->fillRect(mapStartX, mapStartY, mapWidth*tileSize, mapHeight*tileSize, 
-    bgColor);
-  
-  for (int8_t r = 0; r < mapHeight; ++r) {
-    // left half
-    for (int8_t c = 0; c < mapWidth/2; ++c) {
-      switch (mapLayout[r][c]) {
+/* static */void MapData::drawTile(PDQ_ILI9341 * tft, int8_t r, 
+  int8_t c) {
+    switch (mapLayout[r][c]) {
         case barePath: // draw same color in both cases
         case nonPlayArea:
           drawPath(tft, mapStartX + c*tileSize, 
@@ -319,30 +314,17 @@ class GhostShape : public DynamicShape {
               mapStartY + r*tileSize);
           break;
       }
-    }
+  }
 
-    // right half (just a reflection of left half)
-    for (int8_t c = mapWidth/2 - 1; c >= 0; --c) {
-      switch (mapLayout[r][c]) {
-        case barePath: // draw same color in both cases
-        case nonPlayArea:
-          drawPath(tft, mapStartX + 
-            (mapWidth - c - 1)*tileSize,
-            mapStartY + r*tileSize);
-          break;
-
-        case dot: // draw dot on tile
-          drawDot(tft, mapStartX + 
-            (mapWidth - c - 1)*tileSize,
-            mapStartY + r*tileSize);
-          break;
-
-        case powerPellet: // draw power pellet on tile 
-          drawPowerPellet(tft, mapStartX + 
-            (mapWidth - c - 1)*tileSize,
-            mapStartY + r*tileSize);
-          break;
-      }
+/* static  */void MapData::drawMap(PDQ_ILI9341 * tft) {
+  // fill background
+  tft->fillRect(mapStartX, mapStartY, mapWidth*tileSize, mapHeight*tileSize, 
+    bgColor);
+  
+  for (int8_t r = 0; r < mapHeight; ++r) {
+    // left half
+    for (int8_t c = 0; c < mapWidth; ++c) {
+      drawTile(tft,r,c);
     }
   }
 
