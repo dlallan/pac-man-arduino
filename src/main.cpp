@@ -22,10 +22,15 @@ void setup()
   display::drawBackground(&tft);
   mapData::drawMap(&tft);
   pacShapeP->drawShape(&tft);
+  /* Global controller */
+  delete con;
+  con = new Controller();
 }
 
 bool running()
 {
+  con->getDirection();
+  con->buttonTriggered();
   return true;
 }
 
