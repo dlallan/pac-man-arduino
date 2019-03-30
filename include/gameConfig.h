@@ -12,4 +12,7 @@
 #define X_BOUND 28 // num tiles on x-axis
 #define SCALE 8 // tile size
 
+/* For the Joystick */
+#define DEAD_ZONE 64
+
 #endif
