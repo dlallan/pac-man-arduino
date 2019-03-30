@@ -96,6 +96,8 @@ struct MapData {
 
   // draw white "door" on ghost box
   static void drawGhostDoor(PDQ_ILI9341 * tft, uint16_t x, uint16_t y);
+
+  static void drawTile(PDQ_ILI9341 * tft, int8_t r, int8_t c);
 };
 
 // contains properties for ghosts
@@ -239,15 +241,9 @@ class GhostShape : public DynamicShape {
 }
 
 
-/* static  */void MapData::drawMap(PDQ_ILI9341 * tft) {
-  // fill background
-  tft->fillRect(mapStartX, mapStartY, mapWidth*tileSize, mapHeight*tileSize, 
-    bgColor);
-  
-  for (int8_t r = 0; r < mapHeight; ++r) {
-    // left half
-    for (int8_t c = 0; c < mapWidth; ++c) {
-      switch (mapLayout[r][c]) {
+/* static */void MapData::drawTile(PDQ_ILI9341 * tft, int8_t r, 
+  int8_t c) {
+    switch (mapLayout[r][c]) {
         case barePath: // draw same color in both cases
         case nonPlayArea:
           drawPath(tft, mapStartX + c*tileSize, 
@@ -264,32 +260,18 @@ class GhostShape : public DynamicShape {
               mapStartY + r*tileSize);
           break;
       }
-    }
-    /*
-    // right half (just a reflection of left half)
-    for (int8_t c = mapWidth/2 - 1; c >= 0; --c) {
-      switch (mapLayout[r][c]) {
-        case barePath: // draw same color in both cases
-        case nonPlayArea:
-          drawPath(tft, mapStartX + 
-            (mapWidth - c - 1)*tileSize,
-            mapStartY + r*tileSize);
-          break;
+  }
 
-        case dot: // draw dot on tile
-          drawDot(tft, mapStartX + 
-            (mapWidth - c - 1)*tileSize,
-            mapStartY + r*tileSize);
-          break;
-
-        case powerPellet: // draw power pellet on tile 
-          drawPowerPellet(tft, mapStartX + 
-            (mapWidth - c - 1)*tileSize,
-            mapStartY + r*tileSize);
-          break;
-      }
+/* static  */void MapData::drawMap(PDQ_ILI9341 * tft) {
+  // fill background
+  tft->fillRect(mapStartX, mapStartY, mapWidth*tileSize, mapHeight*tileSize, 
+    bgColor);
+  
+  for (int8_t r = 0; r < mapHeight; ++r) {
+    // left half
+    for (int8_t c = 0; c < mapWidth; ++c) {
+      drawTile(tft,r,c);
     }
-    */
   }
 
   // draw ghost door
