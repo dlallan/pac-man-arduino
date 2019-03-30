@@ -11,6 +11,8 @@
 #define Y_BOUND 31 // num tiles on y-axis 
 #define X_BOUND 28 // num tiles on x-axis
 #define SCALE 8 // tile size
+#define ILI9341_PINK 0xEB17
+#define ILI9341_ORANGE 0xEB62
 
 /* For the Joystick */
 #define DEAD_ZONE 64*64
