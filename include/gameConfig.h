@@ -13,6 +13,7 @@
 #define SCALE 8 // tile size
 #define ILI9341_PINK 0xEB17
 #define ILI9341_ORANGE 0xEB62
+#define ILI9341_LIGHTBLUE 0x44FD
 
 /* For the Joystick */
 #define DEAD_ZONE 64*64

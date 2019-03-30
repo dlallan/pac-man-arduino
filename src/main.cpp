@@ -29,8 +29,8 @@ void setup() {
      for debugging */
   Serial.begin(9600);   // Start serial session at 9600 baud rate
   tft.begin();
-
   Display::drawBackground(&tft);
+  // MapData::initMapLayout();
   MapData::drawMap(&tft);
   pacShapeP->drawShape(&tft);
   redShapeP->drawShape(&tft);

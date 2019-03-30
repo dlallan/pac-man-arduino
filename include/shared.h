@@ -37,14 +37,16 @@ struct Display {
   }
 };
 
-// infoBar shows remaining lives and high score data to player
-struct InfoBar {
+// contains properties for info bars at top and bottom parts of screen
+struct InfoBarData {
   static const int16_t bgColor = ILI9341_BLACK;
   static const int16_t fontColor = ILI9341_WHITE;
   
-  // top left corner
-  static const int16_t barX = Display::padding;
-  static const int16_t barY = Display::padding;
+  // top left corner of screen
+  static const Coordinates topBarPos;
+
+  // bottom left corner of screen
+  static const Coordinates bottomBarPos;
 };
 
 // contains properties of game map
@@ -73,14 +75,16 @@ struct MapData {
   static const int16_t dotColor = ILI9341_WHITE; // color of dot pickups
   static const int16_t pelletColor = ILI9341_WHITE; // color of power pellets
 
-
   // top left corner of the map (in pixels)
   static const int16_t mapStartX = Display::padding;
   static const int16_t mapStartY = Display::padding + MapData::tileSize*3;
 
   // 2D Array for level map (left half only)
   // uses mapStates to define initial layout
-  static const uint8_t mapLayout[][mapWidth/2];
+  static /* const */ uint8_t mapLayout[mapHeight][mapWidth/2];
+
+  // set initial map state
+  static void initMapLayout();
 
   // draw map foreground to tft screen
   static void drawMap(PDQ_ILI9341 * tft);
@@ -107,15 +111,18 @@ struct GhostData {
   static const Coordinates pinkInitialPos;
   static const Coordinates orangeInitialPos; 
 
-  static const int16_t ghostDoorColor = ILI9341_WHITE;
+  // ghost colors
   static const int16_t redColor = ILI9341_RED;
   static const int16_t blueColor = ILI9341_CYAN;
   static const int16_t pinkColor = ILI9341_PINK;
   static const int16_t orangeColor = ILI9341_ORANGE;
+  static const int16_t panickedColor = ILI9341_LIGHTBLUE;
 
-  static const int8_t ghostDoorWidth = 2; // width in tiles
-  static const int8_t ghostDoorCol = 14; // 0-based tile position
-  static const int8_t ghostDoorRow = 16; // 0-based tile position
+  // ghost house stuff
+  static const int16_t ghostDoorColor = ILI9341_WHITE;
+  static const int8_t  ghostDoorWidth = 2; // width in tiles
+  static const int8_t  ghostDoorCol = 14; // 0-based tile position
+  static const int8_t  ghostDoorRow = 16; // 0-based tile position
 };
 
 // base class for shapes that move in-game (ghosts and pac-man)
@@ -125,18 +132,25 @@ class DynamicShape {
       this->pos = pos;
       this->size = size;
       this->color = color;
-      this->velocity = {0, 0}; // begin stationary
+      // this->velocity = {0, 0}; // begin stationary
     };
 
+    // draw shape on touchscreen
     void drawShape(PDQ_ILI9341 * tft) {
       // draw shape in current position
       tft->fillRect(pos.x, pos.y, size, size, color);
     };
 
+    // save old position and update current position
+    void setPosition(Coordinates &newPos) {
+      this->lastPos = this->pos;
+      this->pos = newPos;
+    }
+
   protected:
     Coordinates pos; // in pixels
     Coordinates lastPos; // used for redrawing "trail" left behind
-    Coordinates velocity; // in pixels
+    // Coordinates velocity; // in pixels
     int8_t size; // all Dynamic shapes are squares of length "size"
     int16_t color;
 };
@@ -159,7 +173,13 @@ class GhostShape : public DynamicShape {
     color) {};
 };
 
-/// Implementations
+// Implementations
+
+/* static */ const Coordinates InfoBarData::topBarPos = 
+  { Display::padding, Display::padding };
+
+/* static */ const Coordinates InfoBarData::bottomBarPos = 
+  { Display::padding, Y_BOUND - Display::padding };
 
 /* static */ const Coordinates GhostData::redInitialPos = {X_BOUND/2 * SCALE + 
   SCALE/2, 15*SCALE};
@@ -170,7 +190,7 @@ class GhostShape : public DynamicShape {
 /* static */ const Coordinates GhostData::orangeInitialPos = {(X_BOUND/2 +2)* 
   SCALE + SCALE/2, 18*SCALE};
 
-/* static */const uint8_t MapData::mapLayout[][mapWidth/2] = { 
+/* static */ uint8_t MapData::mapLayout[][mapWidth/2] = { 
   {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // top row
   {0,1,1,1,1,1,1,1,1,1,1,1,1,0},
   {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
@@ -204,6 +224,41 @@ class GhostShape : public DynamicShape {
   {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // bottom row
 };
 
+// /* static */ void MapData::initMapLayout() {
+//    mapLayout = { 
+//     {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // top row
+//     {0,1,1,1,1,1,1,1,1,1,1,1,1,0},
+//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
+//     {0,2,0,4,4,0,1,0,4,4,4,0,1,0}, 
+//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
+//     {0,1,1,1,1,1,1,1,1,1,1,1,1,1}, 
+//     {0,1,0,0,0,0,1,0,0,1,0,0,0,0}, 
+//     {0,1,0,0,0,0,1,0,0,1,0,0,0,0}, 
+//     {0,1,1,1,1,1,1,0,0,1,1,1,1,0}, 
+//     {0,0,0,0,0,0,1,0,0,0,0,0,3,0},  
+//     {4,4,4,4,4,0,1,0,0,0,0,0,3,0},  
+//     {4,4,4,4,4,0,1,0,0,3,3,3,3,3}, 
+//     {4,4,4,4,4,0,1,0,0,3,0,0,0,4}, // top of ghost box 
+//     {0,0,0,0,0,0,1,0,0,3,0,4,4,4},  
+//     {3,3,3,3,3,3,1,3,3,3,0,4,4,4},
+//     {0,0,0,0,0,0,1,0,0,3,0,4,4,4},
+//     {4,4,4,4,4,0,1,0,0,3,0,0,0,0}, // bottom of ghost box
+//     {4,4,4,4,4,0,1,0,0,3,3,3,3,3}, 
+//     {4,4,4,4,4,0,1,0,0,3,0,0,0,0}, 
+//     {0,0,0,0,0,0,1,0,0,3,0,0,0,0}, 
+//     {0,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
+//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
+//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
+//     {0,2,1,1,0,0,1,1,1,1,1,1,1,3}, 
+//     {0,0,0,1,0,0,1,0,0,1,0,0,0,0}, 
+//     {0,0,0,1,0,0,1,0,0,1,0,0,0,0}, 
+//     {0,1,1,1,1,1,1,0,0,1,1,1,1,0}, 
+//     {0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
+//     {0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
+//     {0,1,1,1,1,1,1,1,1,1,1,1,1,1}, 
+//     {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // bottom row
+//   };
+// }
 
 /* static  */void MapData::drawPath(PDQ_ILI9341 * tft, uint16_t x, 
   uint16_t y) {
