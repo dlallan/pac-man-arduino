@@ -6,7 +6,8 @@ enum directions
     UP,
     RIGHT,
     LEFT,
-    DOWN
+    DOWN,
+    NEAUTRAL
 };
 
 class Controller
@@ -14,11 +15,14 @@ class Controller
   private:
     int lastState;
     int currentState;
+    long joyX;
+    long joyY;
+    long magnitude;
+    float angle;
   public:
     Controller();
     int getDirection();
-    int getButton();
-    void update();
+    bool buttonTriggered();
 };
 
 #endif

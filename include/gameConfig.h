@@ -13,6 +13,7 @@
 #define SCALE 8 // tile size
 
 /* For the Joystick */
-#define DEAD_ZONE 64
+#define DEAD_ZONE 64*64
+#define STICK_OFFSET 512
 
 #endif
