@@ -14,7 +14,9 @@
 // ...
 
 /* Joystick Wiring */
-// ...
+#define VRx A1
+#define VRy A0
+#define SW 8
 
 /* Other stuff */
 // ...
