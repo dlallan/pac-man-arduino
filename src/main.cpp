@@ -7,8 +7,9 @@
 #include <shared.h>
 
 PDQ_ILI9341 tft; 	// AF: create LCD object (HW SPI, CS=pin 10, D/C=pin 8, reset=9)
-// mapData m; // contains map data
 bool run = true;
+PacManShape pacShape; // our hero
+PacManShape * pacShapeP = &pacShape; // pointer required for polymorphic draw
 
 void setup()
 {
@@ -20,6 +21,7 @@ void setup()
 
   display::drawBackground(&tft);
   mapData::drawMap(&tft);
+  pacShapeP->drawShape(&tft);
 }
 
 bool running()
