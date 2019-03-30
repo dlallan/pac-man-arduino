@@ -17,6 +17,9 @@
 #include "PDQ_ILI9341_config.h"			// PDQ: ILI9341 pins and other setup for this sketch
 #include <PDQ_ILI9341.h>		        // AF: Hardware-specific library
 #include "gameConfig.h"
+#include "controller.h"
+
+Controller *con;
 
 // contains properties of tft screen
 struct display {
