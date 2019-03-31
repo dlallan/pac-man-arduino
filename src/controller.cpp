@@ -43,7 +43,7 @@ int Controller::getDirection()
         }
     }
     /* else */
-    return NEAUTRAL;
+    return NEUTRAL;
 }
 
 bool Controller::buttonTriggered()

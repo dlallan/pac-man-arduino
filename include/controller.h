@@ -7,7 +7,7 @@ enum directions
     RIGHT,
     LEFT,
     DOWN,
-    NEAUTRAL
+    NEUTRAL
 };
 
 class Controller

@@ -1,7 +1,7 @@
 #ifndef CLEANMAP_H
 #define CLEANMAP_H
 #include <arduino.h>
-
+#include "gameConfig.h"
 
 /* static */ uint8_t blankMap[][X_BOUND] = { 
   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // top row

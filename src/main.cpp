@@ -22,6 +22,22 @@ GhostShape * pinkShapeP = &pinkShape;
 GhostShape orangeShape(GhostData::orangeInitialPos, GhostData::orangeColor);
 GhostShape * orangeShapeP = &orangeShape;
 
+// update state of PacMan
+// side effects: 
+//   - map tiles may change if pac-man eats a pellet or dot.
+//   - score may increase for same reason.
+//   - remaining lives may decrease if a ghost eats pacman
+void updatePacMan() {
+  switch(con->getDirection()) {
+    case directions::UP:
+    case directions::RIGHT:
+    case directions::LEFT:
+    case directions::DOWN:
+    case directions::NEUTRAL:
+      break;
+  }
+}
+
 // initialize our game variables
 void setup() {
   init();               // Arduino initialization
@@ -29,7 +45,7 @@ void setup() {
      for debugging */
   Serial.begin(9600);   // Start serial session at 9600 baud rate
   tft.begin();
-  tft.setTextSize(2);
+  tft.setTextSize(FONT_SIZE);
 
   // draw map
   Display::drawBackground(&tft);
@@ -43,12 +59,13 @@ void setup() {
   orangeShapeP->drawShape(&tft);
   
   // draw info bars
-  TopBar::drawLabel(&tft, InfoBarData::topBarPos);
-  TopBar::drawScore(&tft, {InfoBarData::topBarPos.x + Display::width/3, 
-    InfoBarData::topBarPos.y}, 1000);
-  BottomBar::drawLabel(&tft, InfoBarData::bottomBarPos);
-  BottomBar::drawLives(&tft, { InfoBarData::bottomBarPos.x + Display::width/3, 
-    InfoBarData::bottomBarPos.y}, 3);
+  ScoreBar::drawLabel(&tft, InfoBarData::topBarLabelPos, InfoBarData::scoreLabel);
+  ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos/* {InfoBarData::topBarPos.x + Display::width/3, 
+    InfoBarData::topBarPos.y} */, 1000);
+
+  LivesBar::drawLabel(&tft, InfoBarData::bottomBarLabelPos, InfoBarData::livesLabel);
+  LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos/* { InfoBarData::bottomBarPos.x + Display::width/3, 
+    InfoBarData::bottomBarPos.y} */, 3);
   
   /* Global controller */
   delete con;
@@ -56,15 +73,30 @@ void setup() {
 }
 
 void update() {
-  
+  updatePacMan();
+  // updateGhosts();
+  // updateScore();
+  // updateLives();
 }
 
 void draw() {
-
+  // drawPacMan();
+  // drawGhosts();
+  // drawTopBar();
+  // drawBottomBar();
 }
 
 // main loop for game runtime
 bool running() {
+  // if (paused) {
+  //   while (checkJoyStickClick()) {} 
+  //}
+  //else {
+  update();
+  draw();
+  //}
+  delay(FRAME_DELAY);
+  // if (gameOver) return false;
   return true;
 }
 

@@ -41,12 +41,16 @@ struct Display {
 struct InfoBarData {
   static const int16_t bgColor = ILI9341_BLACK;
   static const int16_t fontColor = ILI9341_WHITE;
-  
-  // top left corner of screen
-  static const Coordinates topBarPos;
+  static const char * scoreLabel;
+  static const char * livesLabel;
 
+  // top left corner of screen
+  static const Coordinates topBarLabelPos;
+  static const Coordinates topBarValuePos;
+  
   // bottom left corner of screen
-  static const Coordinates bottomBarPos;
+  static const Coordinates bottomBarLabelPos;
+  static const Coordinates bottomBarValuePos;
 };
 
 // contains properties of game map
@@ -176,71 +180,74 @@ class GhostShape : public Shape {
 };
 
 // Shows current game score to user
-class TopBar {
+class ScoreBar {
   public:
     // draw top bar label
-    static void drawLabel(PDQ_ILI9341 * tft, Coordinates pos) {
+    static void drawLabel(PDQ_ILI9341 * tft, Coordinates pos, 
+      const char * label) {
       // set cursor position
       tft->setCursor(pos.x, pos.y);
       // draw label
-      tft->println(scoreLabel);
+      tft->println(label);
     }
     
     // draw current game score
     static void drawScore(PDQ_ILI9341 * tft, Coordinates pos, int16_t score) {
-      // overwrite previous text
-      tft->fillRect(InfoBarData::topBarPos.x + Display::width/2 - 
-        Display::padding-1, 0, X_BOUND/2, InfoBarData::topBarPos.y, 
-      ILI9341_BLACK);
+      // overwrite previous value
+      tft->fillRect(pos.x, pos.y, X_BOUND, FONT_HEIGHT, ILI9341_BLACK);
 
       // set cursor position and print score
       tft->setCursor(pos.x, pos.y);
       tft->print(score);
     }
 
-  private:
-    static const char * scoreLabel;
-
+  // private:
+  //   static const char * scoreLabel;
 };
 
 // Shows remaining lives to user
-class BottomBar {
+class LivesBar {
   public:
     // draw bottom bar label
-    static void drawLabel(PDQ_ILI9341 * tft, Coordinates pos) {
+    static void drawLabel(PDQ_ILI9341 * tft, Coordinates pos, 
+      const char * label) {
       // set cursor position
       tft->setCursor(pos.x, pos.y);
       // draw label
-      tft->println(livesLabel);
+      tft->println(label);
     }
     
     // draw current game score
     static void drawLives(PDQ_ILI9341 * tft, Coordinates pos, int16_t score) {
-      // overwrite previous text
-      // tft->fillRect(InfoBarData::bottomBarPos.x + Display::width/2 - 
-      //   Display::padding-1, 0, X_BOUND/2, InfoBarData::bottomBarPos.y, 
-      // ILI9341_BLACK);
+      // overwrite previous value
+      tft->fillRect(pos.x, pos.y, X_BOUND, FONT_HEIGHT, ILI9341_BLACK);
 
       // set cursor position and print score
       tft->setCursor(pos.x, pos.y);
       tft->print(score);
     }
 
-  private:
-    static const char * livesLabel;
+  // private:
+  //   static const char * livesLabel;
 };
 
 
 // Implementations
 
-/* static */ const char * TopBar::scoreLabel = "SCORE";
-/* static */ const char * BottomBar::livesLabel = "LIVES";
+/* static */ const char * InfoBarData::scoreLabel = "SCORE";
+/* static */ const char * InfoBarData::livesLabel = "LIVES";
 
-/* static */ const Coordinates InfoBarData::topBarPos = 
+/* static */ const Coordinates InfoBarData::topBarLabelPos = 
   { Display::padding, Display::padding };
+/* static */ const Coordinates InfoBarData::topBarValuePos = 
+  {InfoBarData::topBarLabelPos.x + Display::width/3, InfoBarData::topBarLabelPos.y};
 
-/* static */ const Coordinates InfoBarData::bottomBarPos = 
+/* static */ const Coordinates InfoBarData::bottomBarLabelPos = 
   { Display::padding, Display::height - Display::padding - 2*SCALE };
+
+/* static */ const Coordinates InfoBarData::bottomBarValuePos = 
+  { InfoBarData::bottomBarLabelPos.x + Display::width/3, 
+    InfoBarData::bottomBarLabelPos.y};
 
 /* static */ const Coordinates GhostData::redInitialPos = {X_BOUND/2 * SCALE + 
   SCALE/2, 15*SCALE};
