@@ -3,7 +3,7 @@ Remaining Tasks
         - Joystick controls
             - Main game
             - Start menu
-            - Pause menu
+            - Pause menu [DONE]
             - Game Over goes back to Start menu 
 
     Graphics

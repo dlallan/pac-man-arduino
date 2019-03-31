@@ -226,7 +226,6 @@ class LivesBar {
     }
 };
 
-
 // Implementations
 
 /* static */ const char * InfoBarData::scoreLabel = "SCORE";
