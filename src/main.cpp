@@ -24,20 +24,20 @@ GhostShape * pinkShapeP = &pinkShape;
 GhostShape orangeShape(GhostData::orangeInitialPos, GhostData::orangeColor);
 GhostShape * orangeShapeP = &orangeShape;
 
+PacMan pac;
+
+
 // update state of PacMan
 // side effects: 
 //   - map tiles may change if pac-man eats a pellet or dot.
 //   - score may increase for same reason.
 //   - remaining lives may decrease if a ghost eats pacman
 void updatePacMan() {
-  switch(con.getDirection()) {
-    case directions::UP:
-    case directions::RIGHT:
-    case directions::LEFT:
-    case directions::DOWN:
-    case directions::NEUTRAL:
-      break;
-  }
+  pac.action();
+}
+
+void drawPacMan() {
+  Serial.println("X: " + String(pac.draw().pos.x) + " Y:" + String(pac.draw().pos.y));
 }
 
 void drawScoreBar() {
@@ -92,6 +92,7 @@ void update() {
 }
 
 void draw() {
+  drawPacMan();
   // pacShape.setPosition();
   // drawPacMan();
   // drawGhosts();

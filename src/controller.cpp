@@ -33,7 +33,7 @@ int Controller::getDirection()
         {
             return DOWN;
         }
-        else if (angle <= 45 && angle >= 45)
+        else if (angle <= 45 && angle >= -45)
         {
             return RIGHT;
         }

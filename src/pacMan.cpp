@@ -1,16 +1,21 @@
 #include "pacMan.h"
 #include "global.h"
-
-pacMan::pacMan()
+PacMan::PacMan()
 {
     obj.pos.x = 13.5f; // Col
     obj.pos.y = 23.0f; // Row
-    obj.dir = UP;
-    obj.speed = 10.0 / 5.0; // Do everything wrt having things sum to 1.0 nice
-    int dirQue = LEFT;
+    obj.dir = LEFT;
+    obj.speed = 0.1; // Do everything wrt having things sum to 1.0 nice
+    dirQue = LEFT;
 }
 
-void pacMan::action()
+bool PacMan::isValid(int row, int col)
+{
+    int tile = myMap.mapLayout[row][col];
+    return (tile != 0 && tile != 4);
+}
+
+void PacMan::action()
 {
     int inDir = con.getDirection();
     float col = obj.pos.x;
@@ -22,67 +27,59 @@ void pacMan::action()
 
     if (isWhole(obj.pos.x) && isWhole(obj.pos.y))
     {
-        int tile;
         switch (dirQue)
         {
         case UP:
-            tile = myMap.mapLayout[near(row) - 1][near(col)];
-            if (tile != 0 && tile != 4) // If the space is useable
+            if (isValid(near(row)-1, near(col))) // If the space is useable
             {
                 obj.dir = UP;
             }
             break;
         case DOWN:
-            tile = myMap.mapLayout[near(row) + 1][near(col)];
-            if (tile != 0 && tile != 4) // If the space is useable
+            if (isValid(near(row)+1, near(col))) // If the space is useable
             {
                 obj.dir = DOWN;
             }
             break;
         case LEFT:
-            tile = myMap.mapLayout[near(row)][near(col) - 1];
-            if (tile != 0 && tile != 4) // If the space is useable
+            if (isValid(near(row), near(col)-1)) // If the space is useable
             {
                 obj.dir = LEFT;
             }
             break;
         case RIGHT:
-            tile = myMap.mapLayout[near(row)][near(col) + 1];
-            if (tile != 0 && tile != 4) // If the space is useable
+            if (isValid(near(row), near(col)+1)) // If the space is useable
             {
                 obj.dir = RIGHT;
             }
             break;
         }
 
+        Serial.println(obj.dir);
         switch (obj.dir)
         {
         case UP:
-            tile = myMap.mapLayout[near(row) - 1][near(col)];
-            if (tile != 0 && tile != 4) // If the space is useable
+            if (isValid(near(row)-1, near(col))) // If the space is useable
             {
                 obj.pos.y -= obj.speed;
             }
             break;
         case DOWN:
-            tile = myMap.mapLayout[near(row) + 1][near(col)];
-            if (tile != 0 && tile != 4) // If the space is useable
+            if (isValid(near(row)+1, near(col))) // If the space is useable
             {
                 obj.pos.y += obj.speed;
             }
             break;
         case LEFT:
-            tile = myMap.mapLayout[near(row)][near(col) - 1];
-            if (tile != 0 && tile != 4) // If the space is useable
+            if (isValid(near(row), near(col)-1)) // If the space is useable
             {
                 obj.pos.x -= obj.speed;
             }
             break;
         case RIGHT:
-            tile = myMap.mapLayout[near(row)][near(col) + 1];
-            if (tile != 0 && tile != 4) // If the space is useable
+            if (isValid(near(row), near(col)+1)) // If the space is useable
             {
-                obj.pos.y += obj.speed;
+                obj.pos.x += obj.speed;
             }
             break;
         }
@@ -101,7 +98,7 @@ void pacMan::action()
             obj.pos.x -= obj.speed;
             break;
         case RIGHT:
-            obj.pos.y += obj.speed;
+            obj.pos.x += obj.speed;
             break;
         }
     }

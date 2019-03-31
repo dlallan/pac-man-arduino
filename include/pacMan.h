@@ -4,12 +4,13 @@
 #include "actor.h"
 #include "coordinates.h"
 
-class pacMan: public Actor
+class PacMan: public Actor
 {
     private:
         int dirQue;
+        bool isValid(int row, int col);
     public:
-        pacMan();
+        PacMan();
         void action();
 };
 

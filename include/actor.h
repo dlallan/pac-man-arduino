@@ -13,10 +13,13 @@ struct objectInfo
 class Actor
 {
 public:
-  Actor();
-  ~Actor();
-  void action();
-  objectInfo draw();
+  Actor(){};
+  ~Actor(){};
+  void action(){};
+  objectInfo draw()
+  { 
+    return obj;
+  }
 
 protected:
   objectInfo obj;
