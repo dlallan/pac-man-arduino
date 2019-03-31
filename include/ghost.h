@@ -14,7 +14,7 @@ class Ghost : public Actor {
             Frightened // flee from pac-man (and turn blue)
         } mode;
 
-        Ghost() {};
+        Ghost();
         ~Ghost() {};
 
         // determine next state of ghost
@@ -41,6 +41,8 @@ class Ghost : public Actor {
 
         // determines movement style of ghost
         int8_t currentMode = Ghost::Scatter;
+    private:
+        void moveForward();
 };
 
 #endif
