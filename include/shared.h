@@ -19,10 +19,10 @@
 #include "cleanMap.h"
 #include "gameConfig.h"
 #include "coordinates.h"
+#include "global.h"
 
 /// struct and class definitions
-#include "controller.h"
-Controller *con;
+
 
 // contains properties of tft screen
 struct Display {
@@ -54,7 +54,7 @@ struct InfoBarData {
 };
 
 // contains properties of game map
-struct MapData {
+struct DrawMap {
   static enum {
       wall = 0,
       dot = 1, // small item
@@ -81,11 +81,7 @@ struct MapData {
 
   // top left corner of the map (in pixels)
   static const int16_t mapStartX = Display::padding;
-  static const int16_t mapStartY = Display::padding + MapData::tileSize*3;
-
-  // 2D Array for level map (left half only)
-  // uses mapStates to define initial layout
-  static uint8_t mapLayout[][mapWidth];
+  static const int16_t mapStartY = Display::padding + DrawMap::tileSize*3;
 
   // set initial map state
   static void initMapLayout();
@@ -258,56 +254,13 @@ class LivesBar {
 /* static */ const Coordinates GhostData::orangeInitialPos = {(X_BOUND/2 +2)* 
   SCALE + SCALE/2, 18*SCALE};
 
-/* static */ uint8_t MapData::mapLayout[][mapWidth] = { 
-  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // top row
-  {0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0},
-  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
-  {0,2,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,2,0}, 
-  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
-  {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
-  {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
-  {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
-  {0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0}, 
-  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0},  
-  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0},  
-  {0,1,0,0,0,0,1,0,0,1,1,1,1,3,3,1,1,1,1,0,0,1,0,0,0,0,1,0}, 
-  {0,1,1,0,0,0,1,0,0,1,0,0,0,4,4,0,0,0,1,0,0,1,0,0,0,1,1,0}, // top of ghost box 
-  {0,0,1,0,0,0,1,0,0,1,0,4,4,4,4,4,4,0,1,0,0,1,0,0,0,1,0,0},  
-  {4,0,1,1,2,1,1,1,1,1,0,4,4,4,4,4,4,0,1,1,1,1,1,2,1,1,0,4},
-  {0,0,1,0,0,0,1,0,0,1,0,4,4,4,4,4,4,0,1,0,0,1,0,0,0,1,0,0},
-  {0,1,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,1,0}, // bottom of ghost box
-  {0,1,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,1,0}, 
-  {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
-  {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
-  {0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
-  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
-  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
-  {0,2,1,1,0,0,1,1,1,1,1,1,1,3,3,1,1,1,1,1,1,1,0,0,1,1,2,0}, 
-  {0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0}, 
-  {0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0}, 
-  {0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0}, 
-  {0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
-  {0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
-  {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
-  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // bottom row
-};
-
-/* static */ void MapData::initMapLayout() {
-   for (int8_t r = 0; r < mapHeight; ++r) {
-    // left half
-    for (int8_t c = 0; c < mapWidth; ++c) {
-      mapLayout[r][c] = blankMap[r][c];
-    }
-  }
-}
-
-/* static  */void MapData::drawPath(PDQ_ILI9341 * tft, uint16_t x, 
+/* static */ void DrawMap::drawPath(PDQ_ILI9341 * tft, uint16_t x, 
   uint16_t y) {
   tft->fillRect(x, y, tileSize, tileSize, pathColor);
 }
 
 
-/* static */ void MapData::drawDot(PDQ_ILI9341 * tft, uint16_t x, uint16_t y) {
+/* static */ void DrawMap::drawDot(PDQ_ILI9341 * tft, uint16_t x, uint16_t y) {
   // fill tile first
   drawPath(tft, x, y);
 
@@ -317,7 +270,7 @@ class LivesBar {
 
 }
 
-/* static  */void MapData::drawPowerPellet(PDQ_ILI9341 * tft, uint16_t x, 
+/* static  */void DrawMap::drawPowerPellet(PDQ_ILI9341 * tft, uint16_t x, 
   uint16_t y) {
   // fill tile first
   drawPath(tft, x, y);
@@ -328,16 +281,16 @@ class LivesBar {
 }
 
 
-/* static */ void MapData::drawGhostDoor(PDQ_ILI9341 * tft, uint16_t x, 
+/* static */ void DrawMap::drawGhostDoor(PDQ_ILI9341 * tft, uint16_t x, 
   uint16_t y) {
   tft->drawFastHLine(x, y, GhostData::ghostDoorWidth*tileSize, 
   GhostData::ghostDoorColor);
 }
 
 
-/* static */void MapData::drawTile(PDQ_ILI9341 * tft, int8_t r, 
+/* static */void DrawMap::drawTile(PDQ_ILI9341 * tft, int8_t r, 
   int8_t c) {
-    switch (mapLayout[r][c]) {
+    switch (myMap.mapLayout[r][c]) {
         case barePath: // draw same color in both cases
         case nonPlayArea:
           drawPath(tft, mapStartX + c*tileSize, 
@@ -356,7 +309,7 @@ class LivesBar {
       }
   }
 
-/* static  */void MapData::drawMap(PDQ_ILI9341 * tft) {
+/* static  */void DrawMap::drawMap(PDQ_ILI9341 * tft) {
   // fill background
   tft->fillRect(mapStartX, mapStartY, mapWidth*tileSize, mapHeight*tileSize, 
     bgColor);

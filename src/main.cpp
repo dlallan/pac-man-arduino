@@ -5,6 +5,9 @@
  | Final Project: Pac Man on Arduino                                         |
 /^---------------------------------------------------------------------------*/
 #include <shared.h>
+#include "global.h"
+
+
 
 PDQ_ILI9341 tft; 	// AF: create LCD object (HW SPI, CS=pin 10, D/C=pin 8, reset=9)
 bool run = true;
@@ -28,7 +31,7 @@ GhostShape * orangeShapeP = &orangeShape;
 //   - score may increase for same reason.
 //   - remaining lives may decrease if a ghost eats pacman
 void updatePacMan() {
-  switch(con->getDirection()) {
+  switch(con.getDirection()) {
     case directions::UP:
     case directions::RIGHT:
     case directions::LEFT:
@@ -50,7 +53,7 @@ void setup() {
   // draw map
   Display::drawBackground(&tft);
   // MapData::initMapLayout();
-  MapData::drawMap(&tft);
+  DrawMap::drawMap(&tft);
   
   pacShapeP->drawShape(&tft);
   redShapeP->drawShape(&tft);
@@ -68,8 +71,6 @@ void setup() {
     InfoBarData::bottomBarPos.y} */, 3);
   
   /* Global controller */
-  delete con;
-  con = new Controller();
 }
 
 void update() {
