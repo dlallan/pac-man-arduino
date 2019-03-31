@@ -70,3 +70,6 @@ References (for both server and client):
 
     C++ inheritance syntax
     https://www.cprogramming.com/tutorial/lesson20.html
+    
+    C++ external variables
+    https://stackoverflow.com/questions/249701/why-arent-my-compile-guards-preventing-multiple-definition-inclusions
