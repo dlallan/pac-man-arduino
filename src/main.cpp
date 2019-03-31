@@ -5,7 +5,6 @@
  | Final Project: Pac Man on Arduino                                         |
 /^---------------------------------------------------------------------------*/
 #include <shared.h>
-#include <Fonts/FreeMono12pt7b.h>
 
 PDQ_ILI9341 tft; 	// AF: create LCD object (HW SPI, CS=pin 10, D/C=pin 8, reset=9)
 bool run = true;
@@ -45,21 +44,25 @@ void setup() {
   
   // draw info bars
   TopBar::drawLabel(&tft, InfoBarData::topBarPos);
-  TopBar::drawScore(&tft, {InfoBarData::topBarPos.x + Display::width/3, InfoBarData::topBarPos.y}, 1000);
+  TopBar::drawScore(&tft, {InfoBarData::topBarPos.x + Display::width/3, 
+    InfoBarData::topBarPos.y}, 1000);
+  BottomBar::drawLabel(&tft, InfoBarData::bottomBarPos);
+  BottomBar::drawLives(&tft, { InfoBarData::bottomBarPos.x + Display::width/3, 
+    InfoBarData::bottomBarPos.y}, 3);
+  
   /* Global controller */
   delete con;
   con = new Controller();
 }
 
-void update()
-{
+void update() {
   
 }
 
-void draw()
-{
+void draw() {
 
 }
+
 // main loop for game runtime
 bool running() {
   return true;

@@ -188,7 +188,7 @@ class TopBar {
     
     // draw current game score
     static void drawScore(PDQ_ILI9341 * tft, Coordinates pos, int16_t score) {
-      // overwrite previous score
+      // overwrite previous text
       tft->fillRect(InfoBarData::topBarPos.x + Display::width/2 - 
         Display::padding-1, 0, X_BOUND/2, InfoBarData::topBarPos.y, 
       ILI9341_BLACK);
@@ -205,19 +205,42 @@ class TopBar {
 
 // Shows remaining lives to user
 class BottomBar {
+  public:
+    // draw bottom bar label
+    static void drawLabel(PDQ_ILI9341 * tft, Coordinates pos) {
+      // set cursor position
+      tft->setCursor(pos.x, pos.y);
+      // draw label
+      tft->println(livesLabel);
+    }
+    
+    // draw current game score
+    static void drawLives(PDQ_ILI9341 * tft, Coordinates pos, int16_t score) {
+      // overwrite previous text
+      // tft->fillRect(InfoBarData::bottomBarPos.x + Display::width/2 - 
+      //   Display::padding-1, 0, X_BOUND/2, InfoBarData::bottomBarPos.y, 
+      // ILI9341_BLACK);
 
+      // set cursor position and print score
+      tft->setCursor(pos.x, pos.y);
+      tft->print(score);
+    }
+
+  private:
+    static const char * livesLabel;
 };
 
 
 // Implementations
 
 /* static */ const char * TopBar::scoreLabel = "SCORE";
+/* static */ const char * BottomBar::livesLabel = "LIVES";
 
 /* static */ const Coordinates InfoBarData::topBarPos = 
   { Display::padding, Display::padding };
 
 /* static */ const Coordinates InfoBarData::bottomBarPos = 
-  { Display::padding, Y_BOUND - Display::padding };
+  { Display::padding, Display::height - Display::padding - 2*SCALE };
 
 /* static */ const Coordinates GhostData::redInitialPos = {X_BOUND/2 * SCALE + 
   SCALE/2, 15*SCALE};
@@ -232,22 +255,22 @@ class BottomBar {
   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // top row
   {0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0},
   {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
-  {0,2,0,4,4,0,1,0,4,4,4,0,1,0,0,1,0,4,4,4,0,1,0,4,4,0,2,0}, 
+  {0,2,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,2,0}, 
   {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
   {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
   {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
   {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
   {0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0}, 
   {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0},  
-  {0,1,0,4,4,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,4,4,0,1,0},  
-  {0,1,0,0,4,0,1,0,0,1,1,1,1,3,3,1,1,1,1,0,0,1,0,4,0,0,1,0}, 
-  {0,1,1,0,4,0,1,0,0,1,0,0,0,4,4,0,0,0,1,0,0,1,0,4,0,1,1,0}, // top of ghost box 
+  {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0},  
+  {0,1,0,0,0,0,1,0,0,1,1,1,1,3,3,1,1,1,1,0,0,1,0,0,0,0,1,0}, 
+  {0,1,1,0,0,0,1,0,0,1,0,0,0,4,4,0,0,0,1,0,0,1,0,0,0,1,1,0}, // top of ghost box 
   {0,0,1,0,0,0,1,0,0,1,0,4,4,4,4,4,4,0,1,0,0,1,0,0,0,1,0,0},  
   {4,0,1,1,2,1,1,1,1,1,0,4,4,4,4,4,4,0,1,1,1,1,1,2,1,1,0,4},
   {0,0,1,0,0,0,1,0,0,1,0,4,4,4,4,4,4,0,1,0,0,1,0,0,0,1,0,0},
-  {0,1,1,0,4,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,4,0,1,1,0}, // bottom of ghost box
-  {0,1,0,0,4,0,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,0,4,0,0,1,0}, 
-  {0,1,0,4,4,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,4,4,0,1,0}, 
+  {0,1,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,1,0}, // bottom of ghost box
+  {0,1,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,1,0}, 
+  {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
   {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
   {0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
   {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
@@ -261,6 +284,7 @@ class BottomBar {
   {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // bottom row
 };
+
 /* static */ void MapData::initMapLayout() {
    for (int8_t r = 0; r < mapHeight; ++r) {
     // left half
