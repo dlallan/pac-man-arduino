@@ -5,20 +5,29 @@
 
 struct objectInfo
 {
-    Coordinates pos;
-    int speed;
-    int progress;
-    int direction;
+  CoordinatesF pos;
+  float speed;
+  int dir;
 };
 
-class Actor {
-  public:
-    Actor();
-    ~Actor();
-    void action();
-    objectInfo draw();
-  protected:
-    objectInfo obj;
+class Actor
+{
+public:
+  Actor();
+  ~Actor();
+  void action();
+  objectInfo draw();
+
+protected:
+  objectInfo obj;
+  bool isWhole(float f)
+  {
+    return (fabs(f - round(f)) < 0.04);
+  }
+  int near(float f)
+  {
+    return int(round(f));
+  }
 };
 
 #endif
