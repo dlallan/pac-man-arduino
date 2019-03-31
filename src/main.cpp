@@ -37,7 +37,11 @@ void updatePacMan() {
 }
 
 void drawPacMan() {
-  Serial.println("X: " + String(pac.draw().pos.x) + " Y:" + String(pac.draw().pos.y));
+  Coordinates cord;
+  cord.x = pac.draw().pos.x*SCALE + SCALE + 2;
+  cord.y = pac.draw().pos.y*SCALE + 4*SCALE + 1;
+  pacShapeP->setPosition(cord);
+  pacShapeP->drawShape(&tft);
 }
 
 void drawScoreBar() {

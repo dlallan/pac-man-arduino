@@ -55,7 +55,6 @@ void PacMan::action()
             break;
         }
 
-        Serial.println(obj.dir);
         switch (obj.dir)
         {
         case UP:
@@ -102,4 +101,5 @@ void PacMan::action()
             break;
         }
     }
+    Serial.println("X: " + String(obj.pos.x) + "Y: " + String(obj.pos.x));
 }

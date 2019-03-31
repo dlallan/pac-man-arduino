@@ -7,7 +7,6 @@
 
 extern Controller con;
 extern MapData myMap;
-extern bool isWhole(float f);
 extern Game game;
 
 
