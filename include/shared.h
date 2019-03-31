@@ -127,9 +127,9 @@ struct GhostData {
 };
 
 // base class for shapes that move in-game (ghosts and pac-man)
-class DynamicShape {
+class Shape {
   public:
-    DynamicShape(Coordinates pos, int16_t size, int16_t color) {
+    Shape(Coordinates pos, int16_t size, int16_t color) {
       this->pos = pos;
       this->size = size;
       this->color = color;
@@ -157,9 +157,9 @@ class DynamicShape {
 };
 
 // tracks shape of player character Pac-Man
-class PacManShape : public DynamicShape {
+class PacManShape : public Shape {
   public:
-    PacManShape() : DynamicShape(
+    PacManShape() : Shape(
       // default position is centered below Ghost House
       {X_BOUND/2 * SCALE + SCALE/2, 27*SCALE}, 
       SCALE, 
@@ -167,14 +167,50 @@ class PacManShape : public DynamicShape {
 };
 
 // tracks shape of ghosts
-class GhostShape : public DynamicShape {
+class GhostShape : public Shape {
   public:
     // user must provide initial position and color for a ghost
-    GhostShape(Coordinates pos, int16_t color) : DynamicShape(pos, SCALE,
+    GhostShape(Coordinates pos, int16_t color) : Shape(pos, SCALE,
     color) {};
 };
 
+// Shows current game score to user
+class TopBar {
+  public:
+    // draw top bar label
+    static void drawLabel(PDQ_ILI9341 * tft, Coordinates pos) {
+      // set cursor position
+      tft->setCursor(pos.x, pos.y);
+      // draw label
+      tft->println(scoreLabel);
+    }
+    
+    // draw current game score
+    static void drawScore(PDQ_ILI9341 * tft, Coordinates pos, int16_t score) {
+      // overwrite previous score
+      tft->fillRect(InfoBarData::topBarPos.x + Display::width/2 - 
+        Display::padding-1, 0, X_BOUND/2, InfoBarData::topBarPos.y, 
+      ILI9341_BLACK);
+
+      // set cursor position and print score
+      tft->setCursor(pos.x, pos.y);
+      tft->print(score);
+    }
+
+  private:
+    static const char * scoreLabel;
+
+};
+
+// Shows remaining lives to user
+class BottomBar {
+
+};
+
+
 // Implementations
+
+/* static */ const char * TopBar::scoreLabel = "SCORE";
 
 /* static */ const Coordinates InfoBarData::topBarPos = 
   { Display::padding, Display::padding };
@@ -226,38 +262,38 @@ class GhostShape : public DynamicShape {
 };
 
 // /* static */ void MapData::initMapLayout() {
-//    mapLayout = { 
-//     {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // top row
-//     {0,1,1,1,1,1,1,1,1,1,1,1,1,0},
-//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-//     {0,2,0,4,4,0,1,0,4,4,4,0,1,0}, 
-//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-//     {0,1,1,1,1,1,1,1,1,1,1,1,1,1}, 
-//     {0,1,0,0,0,0,1,0,0,1,0,0,0,0}, 
-//     {0,1,0,0,0,0,1,0,0,1,0,0,0,0}, 
-//     {0,1,1,1,1,1,1,0,0,1,1,1,1,0}, 
-//     {0,0,0,0,0,0,1,0,0,0,0,0,3,0},  
-//     {4,4,4,4,4,0,1,0,0,0,0,0,3,0},  
-//     {4,4,4,4,4,0,1,0,0,3,3,3,3,3}, 
-//     {4,4,4,4,4,0,1,0,0,3,0,0,0,4}, // top of ghost box 
-//     {0,0,0,0,0,0,1,0,0,3,0,4,4,4},  
-//     {3,3,3,3,3,3,1,3,3,3,0,4,4,4},
-//     {0,0,0,0,0,0,1,0,0,3,0,4,4,4},
-//     {4,4,4,4,4,0,1,0,0,3,0,0,0,0}, // bottom of ghost box
-//     {4,4,4,4,4,0,1,0,0,3,3,3,3,3}, 
-//     {4,4,4,4,4,0,1,0,0,3,0,0,0,0}, 
-//     {0,0,0,0,0,0,1,0,0,3,0,0,0,0}, 
-//     {0,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
-//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0}, 
-//     {0,2,1,1,0,0,1,1,1,1,1,1,1,3}, 
-//     {0,0,0,1,0,0,1,0,0,1,0,0,0,0}, 
-//     {0,0,0,1,0,0,1,0,0,1,0,0,0,0}, 
-//     {0,1,1,1,1,1,1,0,0,1,1,1,1,0}, 
-//     {0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
-//     {0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
-//     {0,1,1,1,1,1,1,1,1,1,1,1,1,1}, 
-//     {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // bottom row
+//   MapData::mapLayout[][mapWidth] { 
+//     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // top row
+//     {0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0},
+//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
+//     {0,2,0,4,4,0,1,0,4,4,4,0,1,0,0,1,0,4,4,4,0,1,0,4,4,0,2,0}, 
+//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
+//     {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
+//     {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
+//     {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
+//     {0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0}, 
+//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0},  
+//     {0,1,0,4,4,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,4,4,0,1,0},  
+//     {0,1,0,0,4,0,1,0,0,1,1,1,1,3,3,1,1,1,1,0,0,1,0,4,0,0,1,0}, 
+//     {0,1,1,0,4,0,1,0,0,1,0,0,0,4,4,0,0,0,1,0,0,1,0,4,0,1,1,0}, // top of ghost box 
+//     {0,0,1,0,0,0,1,0,0,1,0,4,4,4,4,4,4,0,1,0,0,1,0,0,0,1,0,0},  
+//     {4,0,1,1,2,1,1,1,1,1,0,4,4,4,4,4,4,0,1,1,1,1,1,2,1,1,0,4},
+//     {0,0,1,0,0,0,1,0,0,1,0,4,4,4,4,4,4,0,1,0,0,1,0,0,0,1,0,0},
+//     {0,1,1,0,4,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,4,0,1,1,0}, // bottom of ghost box
+//     {0,1,0,0,4,0,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,0,4,0,0,1,0}, 
+//     {0,1,0,4,4,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,4,4,0,1,0}, 
+//     {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0}, 
+//     {0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
+//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
+//     {0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0}, 
+//     {0,2,1,1,0,0,1,1,1,1,1,1,1,3,3,1,1,1,1,1,1,1,0,0,1,1,2,0}, 
+//     {0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0}, 
+//     {0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0}, 
+//     {0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0}, 
+//     {0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
+//     {0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0}, 
+//     {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0}, 
+//     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // bottom row
 //   };
 // }
 

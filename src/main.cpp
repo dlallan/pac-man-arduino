@@ -5,6 +5,7 @@
  | Final Project: Pac Man on Arduino                                         |
 /^---------------------------------------------------------------------------*/
 #include <shared.h>
+#include <Fonts/FreeMono12pt7b.h>
 
 PDQ_ILI9341 tft; 	// AF: create LCD object (HW SPI, CS=pin 10, D/C=pin 8, reset=9)
 bool run = true;
@@ -29,15 +30,22 @@ void setup() {
      for debugging */
   Serial.begin(9600);   // Start serial session at 9600 baud rate
   tft.begin();
+  tft.setTextSize(2);
+
+  // draw map
   Display::drawBackground(&tft);
   // MapData::initMapLayout();
   MapData::drawMap(&tft);
+  
   pacShapeP->drawShape(&tft);
   redShapeP->drawShape(&tft);
   blueShapeP->drawShape(&tft);
   pinkShapeP->drawShape(&tft);
   orangeShapeP->drawShape(&tft);
-
+  
+  // draw info bars
+  TopBar::drawLabel(&tft, InfoBarData::topBarPos);
+  TopBar::drawScore(&tft, {InfoBarData::topBarPos.x + Display::width/3, InfoBarData::topBarPos.y}, 1000);
   /* Global controller */
   delete con;
   con = new Controller();
