@@ -6,6 +6,7 @@
 /^---------------------------------------------------------------------------*/
 #include <shared.h>
 #include "global.h"
+#include "pacMan.h"
 
 
 
@@ -81,6 +82,7 @@ void update() {
 }
 
 void draw() {
+  // pacShape.setPosition();
   // drawPacMan();
   // drawGhosts();
   // drawTopBar();

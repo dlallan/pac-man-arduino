@@ -83,9 +83,6 @@ struct DrawMap {
   static const int16_t mapStartX = Display::padding;
   static const int16_t mapStartY = Display::padding + DrawMap::tileSize*3;
 
-  // set initial map state
-  static void initMapLayout();
-
   // draw map foreground to tft screen
   static void drawMap(PDQ_ILI9341 * tft);
 

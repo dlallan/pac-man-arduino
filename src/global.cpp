@@ -1,5 +1,5 @@
 #include "mapData.h"
 #include "controller.h"
 
-extern Controller con;
-extern MapData myMap;
+Controller con;
+MapData myMap;

@@ -3,8 +3,10 @@
 #include "mapData.h"
 #include "controller.h"
 
-Controller con;
-MapData myMap;
+extern Controller con;
+extern MapData myMap;
+extern bool isWhole(float f);
+
 
 
 
