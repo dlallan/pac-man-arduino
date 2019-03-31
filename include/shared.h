@@ -43,10 +43,12 @@ struct InfoBarData {
   static const int16_t fontColor = ILI9341_WHITE;
   static const char * scoreLabel;
   static const char * livesLabel;
+  static const char * pauseLabel;
 
   // top left corner of screen
   static const Coordinates topBarLabelPos;
   static const Coordinates topBarValuePos;
+  static const Coordinates topBarPausePos;
   
   // bottom left corner of screen
   static const Coordinates bottomBarLabelPos;
@@ -187,15 +189,18 @@ class ScoreBar {
     // draw current game score
     static void drawScore(PDQ_ILI9341 * tft, Coordinates pos, int16_t score) {
       // overwrite previous value
-      tft->fillRect(pos.x, pos.y, X_BOUND, FONT_HEIGHT, ILI9341_BLACK);
+      tft->fillRect(pos.x, pos.y, Display::width, FONT_HEIGHT, ILI9341_BLACK);
 
       // set cursor position and print score
       tft->setCursor(pos.x, pos.y);
       tft->print(score);
     }
 
-  // private:
-  //   static const char * scoreLabel;
+    // draw status message in top bar
+    static void drawPause(PDQ_ILI9341 * tft, Coordinates pos, const char * text) {
+        tft->setCursor(pos.x, pos.y);
+        tft->print(text);
+    }
 };
 
 // Shows remaining lives to user
@@ -213,15 +218,12 @@ class LivesBar {
     // draw current game score
     static void drawLives(PDQ_ILI9341 * tft, Coordinates pos, int16_t score) {
       // overwrite previous value
-      tft->fillRect(pos.x, pos.y, X_BOUND, FONT_HEIGHT, ILI9341_BLACK);
+      tft->fillRect(pos.x, pos.y, Display::width, FONT_HEIGHT, ILI9341_BLACK);
 
       // set cursor position and print score
       tft->setCursor(pos.x, pos.y);
       tft->print(score);
     }
-
-  // private:
-  //   static const char * livesLabel;
 };
 
 
@@ -229,11 +231,14 @@ class LivesBar {
 
 /* static */ const char * InfoBarData::scoreLabel = "SCORE";
 /* static */ const char * InfoBarData::livesLabel = "LIVES";
+/* static */ const char * InfoBarData::pauseLabel = "PAUSED";
 
 /* static */ const Coordinates InfoBarData::topBarLabelPos = 
   { Display::padding, Display::padding };
 /* static */ const Coordinates InfoBarData::topBarValuePos = 
   {InfoBarData::topBarLabelPos.x + Display::width/3, InfoBarData::topBarLabelPos.y};
+/* static */ const Coordinates InfoBarData::topBarPausePos = 
+  {InfoBarData::topBarLabelPos.x + 3*Display::width/5, InfoBarData::topBarLabelPos.y};  
 
 /* static */ const Coordinates InfoBarData::bottomBarLabelPos = 
   { Display::padding, Display::height - Display::padding - 2*SCALE };

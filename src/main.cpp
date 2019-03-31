@@ -40,6 +40,16 @@ void updatePacMan() {
   }
 }
 
+void drawScoreBar() {
+  ScoreBar::drawLabel(&tft, InfoBarData::topBarLabelPos, InfoBarData::scoreLabel);
+  ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos, game.getScore());
+}
+
+void drawInfoBar() {
+  LivesBar::drawLabel(&tft, InfoBarData::bottomBarLabelPos, InfoBarData::livesLabel);
+  LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, game.getRemainingLives());
+}
+
 // initialize our game variables
 void setup() {
   init();               // Arduino initialization
@@ -61,14 +71,18 @@ void setup() {
   orangeShapeP->drawShape(&tft);
   
   // draw info bars
-  ScoreBar::drawLabel(&tft, InfoBarData::topBarLabelPos, InfoBarData::scoreLabel);
-  ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos, 1000);
+  // ScoreBar::drawLabel(&tft, InfoBarData::topBarLabelPos, InfoBarData::scoreLabel);
+  // ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos, game.getScore());
+  drawScoreBar();
 
-  LivesBar::drawLabel(&tft, InfoBarData::bottomBarLabelPos, InfoBarData::livesLabel);
-  LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, 3);
-  
+  // LivesBar::drawLabel(&tft, InfoBarData::bottomBarLabelPos, InfoBarData::livesLabel);
+  // LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, game.getRemainingLives());
+  drawInfoBar();
+
   /* Global controller */
 }
+
+
 
 void update() {
   updatePacMan();
@@ -85,12 +99,28 @@ void draw() {
   // drawBottomBar();
 }
 
+void checkPauseGame() {
+  if (con.buttonTriggered())
+    game.pauseGame();
+}
+
 // main loop for game runtime
 bool running() {
-  // if (paused) {
-  //   while (checkJoyStickClick()) {} 
-  //}
-  //else {
+  // game is paused
+  checkPauseGame();
+  if (game.isPaused()) {
+    // print PAUSED status message on-screen
+    ScoreBar::drawPause(&tft, InfoBarData::topBarPausePos, 
+      InfoBarData::pauseLabel);
+    
+    // wait for joystick click to resume game
+    while (!con.buttonTriggered()) {}
+  
+    // redraw top bar
+    drawScoreBar();
+    game.resumeGame();
+  }
+  
   update();
   draw();
   //}

@@ -24,9 +24,19 @@ class Game {
         // add val to score. Does nothing if val is not positive.
         void increaseScore(int16_t val);
 
+        // check value of paused member
+        bool isPaused();
+
+        // set paused member
+        void pauseGame();
+
+        // clear paused member
+        void resumeGame();
+
     private:
         int16_t score = 0; // game score
         int16_t lives;     // player lives
+        bool paused = false; // if true, then game should stop running
 };
 
 #endif
