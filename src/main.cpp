@@ -8,8 +8,6 @@
 #include "global.h"
 #include "pacMan.h"
 
-
-
 PDQ_ILI9341 tft; 	// AF: create LCD object (HW SPI, CS=pin 10, D/C=pin 8, reset=9)
 bool run = true;
 
@@ -64,12 +62,10 @@ void setup() {
   
   // draw info bars
   ScoreBar::drawLabel(&tft, InfoBarData::topBarLabelPos, InfoBarData::scoreLabel);
-  ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos/* {InfoBarData::topBarPos.x + Display::width/3, 
-    InfoBarData::topBarPos.y} */, 1000);
+  ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos, 1000);
 
   LivesBar::drawLabel(&tft, InfoBarData::bottomBarLabelPos, InfoBarData::livesLabel);
-  LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos/* { InfoBarData::bottomBarPos.x + Display::width/3, 
-    InfoBarData::bottomBarPos.y} */, 3);
+  LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, 3);
   
   /* Global controller */
 }
