@@ -17,4 +17,11 @@ struct Coordinates
     uint16_t y;
 };
 
+struct CoordinatesF
+{   
+    /* A structure for storing floating x y coordinates */
+    float x;
+    float y;
+};
+
 #endif
