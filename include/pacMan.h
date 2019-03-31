@@ -7,8 +7,13 @@
 class pacMan: public Actor
 {
     private:
+        struct surounding
+        {
+            int left,right,up,down;
+        }map;
     public:
+        pacMan();
+        void action();
 };
-
 
 #endif
