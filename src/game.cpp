@@ -1,7 +1,7 @@
 #include "game.h"
 
 Game::Game(int16_t lives /*= 3*/) {
-    lives = lives;
+    this->lives = lives;
 }
 
 Game::~Game() {}

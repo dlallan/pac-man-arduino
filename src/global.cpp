@@ -8,4 +8,4 @@ Controller con;
 MapData myMap;
 Game game;
 PacMan pac;
-// Ghost red;
+Ghost red;

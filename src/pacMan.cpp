@@ -67,6 +67,7 @@ void PacMan::action()
             else {
                 // TODO: increase speed temporarily and frighten ghosts
                 game.increaseScore(5);
+                
             }
             game.scoreChanged = true;
             // remove item from tile

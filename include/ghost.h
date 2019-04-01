@@ -3,7 +3,7 @@
 #include "actor.h"
 #include "coordinates.h"
 #include "gameConfig.h"
-#include "global.h"
+// #include "global.h"
 
 class Ghost : public Actor {
     public:
@@ -43,6 +43,7 @@ class Ghost : public Actor {
 
         bool reDrawTile;
         Coordinates lastTile;
+
     protected:
         // where the ghost wants to go
         Coordinates targetTile;
@@ -51,8 +52,11 @@ class Ghost : public Actor {
         Coordinates homeTile;
 
         Coordinates currentTile;
+
         // determines movement style of ghost
-        int8_t currentMode = Ghost::Scatter;
+        // (chase is default)
+        int8_t currentMode = Ghost::Chase;
+
     private:
 
         void followPath();

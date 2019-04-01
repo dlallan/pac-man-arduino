@@ -27,7 +27,7 @@ GhostShape orangeShape(GhostData::orangeInitialPos, GhostData::orangeColor);
 GhostShape * orangeShapeP = &orangeShape;
 
 // PacMan pac;
-Ghost red;
+// Ghost red;
 
 // update state of PacMan
 // side effects: 
@@ -172,7 +172,7 @@ bool running() {
   
   update();
   draw();
-  
+
   // check for game over
   if (game.isGameOver()) {
     drawGameOver();
