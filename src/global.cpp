@@ -9,7 +9,10 @@ Controller con;
 MapData myMap;
 Game game;
 PacMan pac;
-RedGhost red;
+Ghost red(13.0f,11.0f,0.1f,DOWN,0);  //0 -> never makes a wrong turn
+Ghost pink(15.0f,16.0f,0.125f,UP,200);   // makes a wrong turn 20.0% of the time
+Ghost blue(15.0f,11.0f,0.1f,RIGHT,100);
+Ghost orange(13.0f,16.0f,0.2f,LEFT,500);
 
 bool touching(CoordinatesF a, CoordinatesF b)
 {

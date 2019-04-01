@@ -57,16 +57,24 @@ void updateLives() {
   LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, game.getRemainingLives());
 }
 
+void runGhost(Ghost &g)
+{
+  if (pac.powerful == 1) {
+    g.setCurrentMode(mode::Frightened);
+  }
+  else if (pac.powerful == 0 && g.getCurrentMode() != mode::Chase) {
+    g.setCurrentMode(mode::Chase);
+  }
+  g.action();
+}
+
 // update state of the four ghosts
 void updateGhosts(){
   // check if pac-man state has changed
-  if (pac.powerful == 1) {
-    red.setCurrentMode(mode::Frightened);
-  }
-  else if (pac.powerful == 0 && red.getCurrentMode() != mode::Chase) {
-    red.setCurrentMode(mode::Chase);
-  }
-  red.action();
+  runGhost(red);
+  runGhost(pink);
+  runGhost(blue);
+  runGhost(orange);
 }
 
 void drawRed(){
@@ -93,10 +101,22 @@ void drawRed(){
     DrawMap::drawPowerPellet(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
               DrawMap::mapStartY + r*DrawMap::tileSize);
   }
-  /*
-  c = red.currentTile.x;
-  r = red.currentTile.y;
-  t = myMap.mapLayout[r][c];
+}
+
+void drawBlue(){
+  Coordinates cord;
+  cord.x = blue.draw().pos.x*SCALE + SCALE + 2;
+  cord.y = blue.draw().pos.y*SCALE + 4*SCALE + 1;
+  blueShapeP->setPosition(cord);
+  if (blue.getCurrentMode() == mode::Frightened) {
+    blueShapeP->drawPanickedGhost(&tft);
+  }
+  else {
+    blueShapeP->drawShape(&tft);
+  }
+  int c = blue.lastTile.x;
+  int r = blue.lastTile.y;
+  int t = myMap.mapLayout[r][c];
   if (t == 1)
   {
     DrawMap::drawDot(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
@@ -107,11 +127,65 @@ void drawRed(){
     DrawMap::drawPowerPellet(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
               DrawMap::mapStartY + r*DrawMap::tileSize);
   }
-  */
+}
+
+void drawPink(){
+  Coordinates cord;
+  cord.x = pink.draw().pos.x*SCALE + SCALE + 2;
+  cord.y = pink.draw().pos.y*SCALE + 4*SCALE + 1;
+  pinkShapeP->setPosition(cord);
+  if (pink.getCurrentMode() == mode::Frightened) {
+    pinkShapeP->drawPanickedGhost(&tft);
+  }
+  else {
+    pinkShapeP->drawShape(&tft);
+  }
+  int c = pink.lastTile.x;
+  int r = pink.lastTile.y;
+  int t = myMap.mapLayout[r][c];
+  if (t == 1)
+  {
+    DrawMap::drawDot(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
+              DrawMap::mapStartY + r*DrawMap::tileSize);
+  }
+  else if (t == 2)
+  {
+    DrawMap::drawPowerPellet(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
+              DrawMap::mapStartY + r*DrawMap::tileSize);
+  }
+}
+
+void drawOrange(){
+  Coordinates cord;
+  cord.x = orange.draw().pos.x*SCALE + SCALE + 2;
+  cord.y = orange.draw().pos.y*SCALE + 4*SCALE + 1;
+  orangeShapeP->setPosition(cord);
+  if (orange.getCurrentMode() == mode::Frightened) {
+    orangeShapeP->drawPanickedGhost(&tft);
+  }
+  else {
+    orangeShapeP->drawShape(&tft);
+  }
+  int c = orange.lastTile.x;
+  int r = orange.lastTile.y;
+  int t = myMap.mapLayout[r][c];
+  if (t == 1)
+  {
+    DrawMap::drawDot(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
+              DrawMap::mapStartY + r*DrawMap::tileSize);
+  }
+  else if (t == 2)
+  {
+    DrawMap::drawPowerPellet(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
+              DrawMap::mapStartY + r*DrawMap::tileSize);
+  }
 }
 
 void drawGhosts() {
   drawRed();
+  drawBlue();
+  drawPink();
+  drawOrange();
 }
 void updatePacMan() {
   pac.action();
@@ -141,7 +215,7 @@ void setup() {
   /* The final product doesnt need serial com's its just going to be useful 
      for debugging */
   Serial.begin(9600);   // Start serial session at 9600 baud rate
-  randomSeed(analogRead(0));
+  randomSeed(analogRead(A7));
 
   tft.begin();
   tft.setTextSize(FONT_SIZE);
@@ -170,25 +244,44 @@ void setup() {
 }
 
 
-void update() {
-  updatePacMan();
-  updateGhosts();
-  if (touching(pac.draw().pos,red.draw().pos))
+void goHome()
+{
+  pac.tpTo(23.0f,13.5f,LEFT);
+  red.tpTo(13.0f,11.0f,DOWN);
+  pink.tpTo(15.0f,16.0f,UP);
+  blue.tpTo(15.0f,11.0f,RIGHT);
+  orange.tpTo(13.0f,16.0f,LEFT); 
+}
+void checkGhost(Ghost &g)
+{
+  if (touching(pac.draw().pos,g.draw().pos))
   {
-    if (red.getCurrentMode() != mode::Frightened)
+    if (g.getCurrentMode() != mode::Frightened)
     {
       delay(500);
-      pac.tpTo(23.0f,13.5f,LEFT);
-      red.tpTo(11.0f,13.0f,LEFT); 
+      goHome();
       game.loseLife();
       game.livesChanged = true;
     }
     else
     {
-      red.tpTo(11.0f,13.0f,LEFT); 
-      red.setCurrentMode(mode::Chase);
+      g.tpTo(11.0f,13.0f,LEFT); 
+      g.setCurrentMode(mode::Chase);
     }
   }
+}
+
+
+
+void update() {
+  updatePacMan();
+  updateGhosts();
+
+  checkGhost(orange);
+  checkGhost(blue);
+  checkGhost(pink);
+  checkGhost(red);
+
   if (game.scoreChanged) {
     updateScore();
     game.scoreChanged = false;
@@ -198,6 +291,24 @@ void update() {
     updateLives();
     game.livesChanged = false;
   }
+
+  if(game.getScore()>20 && pink.draw().pos == CoordinatesF({13.0f,13.0f}))
+  {
+    pink.tpTo(11.0f,13.0f,LEFT);
+  }
+  else if (game.getScore()>35 && blue.draw().pos == CoordinatesF({13.0f,13.0f}))
+  {
+    blue.tpTo(11.0f,13.0f,LEFT);
+  }
+  else if (game.getScore()>50 && orange.draw().pos == CoordinatesF({13.0f,13.0f}))
+  {
+    orange.tpTo(11.0f,13.0f,LEFT);
+  }
+  else if (red.draw().pos ==  CoordinatesF({13.0f,13.0f}))
+  {
+    red.tpTo(11.0F,13.0f,LEFT);
+  }
+
 }
 
 void draw() {

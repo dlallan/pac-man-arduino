@@ -1,12 +1,13 @@
 #include "ghost.h"
 #include "global.h"
 #include "BFS.h"
-Ghost::Ghost()
+Ghost::Ghost(float row, float col, float spd,int dir,int err)
 {
-    obj.pos.x = 13.0f; // Col
-    obj.pos.y = 11.0f; // Row
-    obj.speed = 0.1f;
-    obj.dir = LEFT;
+    obj.pos.x = col; // Col
+    obj.pos.y = row; // Row
+    obj.speed = spd;
+    obj.dir = dir;
+    errorChance = err;
 }
 
 void Ghost::action() {
@@ -18,7 +19,7 @@ void Ghost::action() {
         currentTile.y = near(obj.pos.y);
         if (atIntersection()) {
             CoordinatesF pacPosF = pac.draw().pos;
-            if (currentMode == mode::Chase && !(near(pacPosF.x) == near(obj.pos.x) && near(pacPosF.y) == near(obj.pos.y) )) {
+            if (random(0,1000)>errorChance && currentMode == mode::Chase && !(near(pacPosF.x) == near(obj.pos.x) && near(pacPosF.y) == near(obj.pos.y) )) {
                 // get next tile from pac-man's current position
                 //CoordinatesF pacPosF = pac.draw().pos;
                 setTargetTile({near(pacPosF.x), near(pacPosF.y)}); // row, col pair!
@@ -48,10 +49,6 @@ void Ghost::action() {
                     obj.dir = UP;
                 //    invalid = !isValid(currentTile.y-1,currentTile.x);
                 }
-                // if (invalid)
-                // {
-                //   randomPath();
-                //}
             }
             else if (currentMode == mode::Frightened) {
                 // get a pseudorandom direction
@@ -75,7 +72,7 @@ void Ghost::randomPath()
 {
     int row = near(obj.pos.y);
     int col = near(obj.pos.x);
-    int ran = analogRead(A7)%4;
+    int ran = random(0,1000)%4;
     // Serial.println("Dir: " + String(ran));
     switch (ran)
     {

@@ -15,6 +15,7 @@ struct Coordinates
     /* A structure for storing x y coordinates */
     int16_t x;
     int16_t y;
+ 
 };
 
 struct CoordinatesF
@@ -22,6 +23,12 @@ struct CoordinatesF
     /* A structure for storing floating x y coordinates */
     float x;
     float y;
+       inline bool operator==(CoordinatesF a) {
+       if (fabs(a.x-x)<0.04 && fabs(a.y- y)<0.04)
+          return true;
+       else
+          return false;
+    }
 };
 
 #endif

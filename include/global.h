@@ -11,7 +11,10 @@ extern Controller con;
 extern MapData myMap;
 extern Game game;
 extern PacMan pac;
-extern RedGhost red;
+extern Ghost red;
+extern Ghost pink;
+extern Ghost blue;
+extern Ghost orange;
 extern bool touching(CoordinatesF a, CoordinatesF b);
 
 

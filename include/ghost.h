@@ -14,7 +14,7 @@ enum class mode {
 
 class Ghost : public Actor {
     public:
-        Ghost();
+        Ghost::Ghost(float row, float col, float spd,int dir,int err);
         ~Ghost() {};
 
         // determine next state of ghost
@@ -51,7 +51,7 @@ class Ghost : public Actor {
 
         // where to go in scatter mode
         Coordinates homeTile;
-
+        int errorChance;
 
         // determines movement style of ghost
         // (chase is default)
