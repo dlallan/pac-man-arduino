@@ -36,6 +36,11 @@ Ghost red;
 //   - remaining lives may decrease if a ghost eats pacman
 
 
+// update score display
+void updateScore() {
+  ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos, game.getScore());
+}
+
 // update state of the four ghosts
 void updateGhosts(){
   red.action();
@@ -111,8 +116,15 @@ void setup() {
 void update() {
   updatePacMan();
   updateGhosts();
-  // updateScore();
-  // updateLives();
+
+  if (game.scoreChanged) {
+    updateScore();
+    game.scoreChanged = false;
+  }
+
+  if (game.livesChanged) {
+    // updateLives();
+  }
 }
 
 void draw() {

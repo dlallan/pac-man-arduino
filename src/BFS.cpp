@@ -81,8 +81,10 @@ Coordinates BFS(/* int mat[][COL], */ Coordinates src, Coordinates dest)
               
             // if adjacent cell is valid, has path and 
             // not visited yet, enqueue it. 
-            if (isValid(row, col) && (myMap.mapLayout[row][col] != 0 && 
-                myMap.mapLayout[row][col] != 4) && !visited[row][col]) 
+            if (isValid(row, col) && 
+                (myMap.mapLayout[row][col] != MapData::wall && 
+                myMap.mapLayout[row][col] != MapData::nonPlayArea) && 
+                !visited[row][col]) 
             { 
                 // save the node's coordinates in the searchMap
                 searchMap[row][col] = curr.pt;

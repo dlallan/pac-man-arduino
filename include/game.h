@@ -33,10 +33,21 @@ class Game {
         // clear paused member
         void resumeGame();
 
+        // raise or lower flag for new score to display
+        bool scoreChanged;
+        // raise or lower flag for new num lives to display
+        bool livesChanged;
+
     private:
         int16_t score = 0; // game score
+        
+        // get this score to win the game
+        // (310 dots + 6 power pellets * 5 points per pellet)
+        const int16_t maxScore = 340;
+        
         int16_t lives;     // player lives
         bool paused = false; // if true, then game should stop running
+
 };
 
 #endif
