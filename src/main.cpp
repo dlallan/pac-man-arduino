@@ -7,6 +7,7 @@
 #include <shared.h>
 #include "global.h"
 #include "pacMan.h"
+#include "ghost.h"
 
 PDQ_ILI9341 tft; 	// AF: create LCD object (HW SPI, CS=pin 10, D/C=pin 8, reset=9)
 bool run = true;
@@ -25,7 +26,7 @@ GhostShape orangeShape(GhostData::orangeInitialPos, GhostData::orangeColor);
 GhostShape * orangeShapeP = &orangeShape;
 
 PacMan pac;
-
+Ghost test;
 
 // update state of PacMan
 // side effects: 
@@ -34,10 +35,21 @@ PacMan pac;
 //   - remaining lives may decrease if a ghost eats pacman
 void updatePacMan() {
   pac.action();
+
+  test.action();
 }
 
 void drawPacMan() {
-  Serial.println("X: " + String(pac.draw().pos.x) + " Y:" + String(pac.draw().pos.y));
+  Coordinates cord;
+  cord.x = pac.draw().pos.x*SCALE + SCALE + 2;
+  cord.y = pac.draw().pos.y*SCALE + 4*SCALE + 1;
+  pacShapeP->setPosition(cord);
+  pacShapeP->drawShape(&tft);
+
+  cord.x = test.draw().pos.x*SCALE + SCALE + 2;
+  cord.y = test.draw().pos.y*SCALE + 4*SCALE + 1;
+  redShapeP->setPosition(cord);
+  redShapeP->drawShape(&tft);
 }
 
 void drawScoreBar() {

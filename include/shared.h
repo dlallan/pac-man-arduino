@@ -139,7 +139,9 @@ class Shape {
     // draw shape on touchscreen
     void drawShape(PDQ_ILI9341 * tft) {
       // draw shape in current position
+      tft->fillRect(lastPos.x, lastPos.y, size, size, ILI9341_BLACK);
       tft->fillRect(pos.x, pos.y, size, size, color);
+      
     };
 
     // save old position and update current position
@@ -162,7 +164,7 @@ class PacManShape : public Shape {
     PacManShape() : Shape(
       // default position is centered below Ghost House
       {X_BOUND/2 * SCALE + SCALE/2, 27*SCALE}, 
-      SCALE, 
+      SCALE-2, 
       ILI9341_YELLOW) {};
 };
 

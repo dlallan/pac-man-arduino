@@ -14,8 +14,7 @@ class Ghost : public Actor {
             Frightened // flee from pac-man (and turn blue)
         } mode;
 
-        // set home tile of ghost
-        Ghost(Coordinates &home);
+        Ghost();
         ~Ghost() {};
 
         // determine next state of ghost
@@ -45,10 +44,8 @@ class Ghost : public Actor {
 
         // determines movement style of ghost
         int8_t currentMode = Ghost::Scatter;
-
-        // true when ghost needs to calculate shortest path to target tile.
-        // false when ghost can move forward freely.
-        bool needsNewDirection = false;
+    private:
+        void moveForward();
 };
 
 #endif
