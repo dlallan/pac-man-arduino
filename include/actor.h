@@ -20,7 +20,12 @@ public:
   { 
     return obj;
   }
-
+  void tpTo(float row, float col, int dir)
+  {
+    obj.dir = dir;
+    obj.pos.x = col;
+    obj.pos.y = row;
+  }
 protected:
   objectInfo obj;
   bool isWhole(float f)

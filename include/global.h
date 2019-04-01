@@ -5,12 +5,14 @@
 #include "game.h"
 #include "pacMan.h"
 #include "ghost.h"
+#include "RedGhost.h"
 
 extern Controller con;
 extern MapData myMap;
 extern Game game;
 extern PacMan pac;
-extern Ghost red;
+extern RedGhost red;
+extern bool touching(CoordinatesF a, CoordinatesF b);
 
 
 #endif

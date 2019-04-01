@@ -24,7 +24,13 @@ void PacMan::action()
     {
         dirQue = inDir;
     }
-
+    if (millis() - powerTimeStart >= powerTimeDuration) {
+        powerful = 0;
+    }
+    else
+    {
+        powerful = 2;
+    }
     // check if pac-man is on a single tile
     if (isWhole(obj.pos.x) && isWhole(obj.pos.y))
     {   
@@ -67,7 +73,7 @@ void PacMan::action()
             else {
                 // TODO: increase speed temporarily and frighten ghosts
                 game.increaseScore(5);
-                powerful = true;
+                powerful = 1;
                 powerTimeStart = millis();
             }
             game.scoreChanged = true;
@@ -125,8 +131,6 @@ void PacMan::action()
     }
 
     // turn off powerful if time elapsed
-    if (millis() - powerTimeStart >= powerTimeDuration) {
-        powerful = false;
-    }
+    
     // Serial.println("X: " + String(obj.pos.x) + "Y: " + String(obj.pos.x));
 }

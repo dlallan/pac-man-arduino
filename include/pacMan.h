@@ -12,7 +12,7 @@ class PacMan: public Actor
     public:
         PacMan();
         void action();
-        bool powerful; // true when power pellet is consumed
+        int powerful; // 0 when weak, 1 when start strong, 2 while waiting
 
         unsigned long powerTimeStart; // use with millis()
         const unsigned long powerTimeDuration = 10000; // 10 seconds

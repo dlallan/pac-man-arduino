@@ -53,13 +53,17 @@ void updateScore() {
   ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos, game.getScore());
 }
 
+void updateLives() {
+  LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, game.getRemainingLives());
+}
+
 // update state of the four ghosts
 void updateGhosts(){
   // check if pac-man state has changed
-  if (pac.powerful && red.getCurrentMode() != mode::Frightened) {
+  if (pac.powerful == 1) {
     red.setCurrentMode(mode::Frightened);
   }
-  else if (!pac.powerful && red.getCurrentMode() != mode::Chase) {
+  else if (pac.powerful == 0 && red.getCurrentMode() != mode::Chase) {
     red.setCurrentMode(mode::Chase);
   }
   red.action();
@@ -165,17 +169,34 @@ void setup() {
   /* Global controller */
 }
 
+
 void update() {
   updatePacMan();
   updateGhosts();
-
+  if (touching(pac.draw().pos,red.draw().pos))
+  {
+    if (red.getCurrentMode() != mode::Frightened)
+    {
+      delay(500);
+      pac.tpTo(23.0f,13.5f,LEFT);
+      red.tpTo(11.0f,13.0f,LEFT); 
+      game.loseLife();
+      game.livesChanged = true;
+    }
+    else
+    {
+      red.tpTo(11.0f,13.0f,LEFT); 
+      red.setCurrentMode(mode::Chase);
+    }
+  }
   if (game.scoreChanged) {
     updateScore();
     game.scoreChanged = false;
   }
 
   if (game.livesChanged) {
-    // updateLives();
+    updateLives();
+    game.livesChanged = false;
   }
 }
 
