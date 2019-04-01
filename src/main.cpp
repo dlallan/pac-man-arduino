@@ -55,6 +55,13 @@ void updateScore() {
 
 // update state of the four ghosts
 void updateGhosts(){
+  // check if pac-man state has changed
+  if (pac.powerful && red.getCurrentMode() != mode::Frightened) {
+    red.setCurrentMode(mode::Frightened);
+  }
+  else if (!pac.powerful && red.getCurrentMode() != mode::Chase) {
+    red.setCurrentMode(mode::Chase);
+  }
   red.action();
 }
 
@@ -63,7 +70,12 @@ void drawRed(){
   cord.x = red.draw().pos.x*SCALE + SCALE + 2;
   cord.y = red.draw().pos.y*SCALE + 4*SCALE + 1;
   redShapeP->setPosition(cord);
-  redShapeP->drawShape(&tft);
+  if (red.getCurrentMode() == mode::Frightened) {
+    redShapeP->drawPanickedGhost(&tft);
+  }
+  else {
+    redShapeP->drawShape(&tft);
+  }
 }
 
 void drawGhosts() {
@@ -97,6 +109,8 @@ void setup() {
   /* The final product doesnt need serial com's its just going to be useful 
      for debugging */
   Serial.begin(9600);   // Start serial session at 9600 baud rate
+  randomSeed(analogRead(0));
+
   tft.begin();
   tft.setTextSize(FONT_SIZE);
 

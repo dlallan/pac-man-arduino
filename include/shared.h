@@ -144,6 +144,12 @@ class Shape {
       
     };
 
+    void drawShape(PDQ_ILI9341 * tft, int16_t col) {
+      // draw shape in current position
+      tft->fillRect(lastPos.x, lastPos.y, size, size, ILI9341_BLACK);
+      tft->fillRect(pos.x, pos.y, size, size, col);
+    };
+
     // save old position and update current position
     void setPosition(Coordinates &newPos) {
       this->lastPos = this->pos;
@@ -174,6 +180,13 @@ class GhostShape : public Shape {
     // user must provide initial position and color for a ghost
     GhostShape(Coordinates pos, int16_t color) : Shape(pos, SCALE-2,
     color) {};
+
+    void drawPanickedGhost(PDQ_ILI9341 * tft) {
+      drawShape(tft, ILI9341_LIGHTBLUE);
+    };
+
+  private:
+    static const int16_t panickedColor = ILI9341_LIGHTBLUE;
 };
 
 // Shows current game score to user

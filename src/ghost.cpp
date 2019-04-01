@@ -14,32 +14,38 @@ void Ghost::action() {
     if(isWhole(obj.pos.x) && isWhole(obj.pos.y))
     {
         if (atIntersection()) {
-            // get next tile from pac-man's current position
-            CoordinatesF pacPosF = pac.draw().pos;
-            setTargetTile({near(pacPosF.x), near(pacPosF.y)}); // row, col pair!
-            
-            // use BFS search to get next tile in min-path
-            // Coordinates myPos = {near(obj.pos.x), near(obj.pos.y)};
-            lastTile = currentTile;
-            currentTile.x = near(obj.pos.x);
-            currentTile.y = near(obj.pos.y);
-            // BFS uses row col pairs, so swap x and y as needed
-            Coordinates nextTile = BFS({currentTile.y, currentTile.x}, 
-                {targetTile.y, targetTile.x});
-            nextTile = {nextTile.y, nextTile.x};
+            if (currentMode == mode::Chase) {
+                // get next tile from pac-man's current position
+                CoordinatesF pacPosF = pac.draw().pos;
+                setTargetTile({near(pacPosF.x), near(pacPosF.y)}); // row, col pair!
+                
+                // use BFS search to get next tile in min-path
+                // Coordinates myPos = {near(obj.pos.x), near(obj.pos.y)};
+                lastTile = currentTile;
+                currentTile.x = near(obj.pos.x);
+                currentTile.y = near(obj.pos.y);
+                // BFS uses row col pairs, so swap x and y as needed
+                Coordinates nextTile = BFS({currentTile.y, currentTile.x}, 
+                    {targetTile.y, targetTile.x});
+                nextTile = {nextTile.y, nextTile.x};
 
-            // set new direction for ghost
-            if (nextTile.x > currentTile.x) {
-                obj.dir = RIGHT;
+                // set new direction for ghost
+                if (nextTile.x > currentTile.x) {
+                    obj.dir = RIGHT;
+                }
+                else if (nextTile.x < currentTile.x) {
+                    obj.dir = LEFT;
+                }
+                else if (nextTile.y > currentTile.y) {
+                    obj.dir = DOWN;
+                }
+                else if (nextTile.y < currentTile.y) {
+                    obj.dir = UP;
+                }
             }
-            else if (nextTile.x < currentTile.x) {
-                obj.dir = LEFT;
-            }
-            else if (nextTile.y > currentTile.y) {
-                obj.dir = DOWN;
-            }
-            else if (nextTile.y < currentTile.y) {
-                obj.dir = UP;
+            else if (currentMode == mode::Frightened) {
+                // get a pseudorandom direction
+                this->obj.dir = random(0,4);              
             }
             
             // move in new direction
@@ -108,11 +114,11 @@ void Ghost::moveForward() {
 }
 
 bool Ghost::getFrightened() {
-    return currentMode == Ghost::Frightened;
+    return currentMode == mode::Frightened;
 }
 
-void Ghost::setCurrentMode(int8_t mode) {
-    currentMode = mode;
+void Ghost::setCurrentMode(mode m) {
+    currentMode = m;
 }
 
 bool Ghost::isValid(int16_t row, int16_t col) {

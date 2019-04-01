@@ -67,9 +67,11 @@ void PacMan::action()
             else {
                 // TODO: increase speed temporarily and frighten ghosts
                 game.increaseScore(5);
-                
+                powerful = true;
+                powerTimeStart = millis();
             }
             game.scoreChanged = true;
+
             // remove item from tile
             myMap.mapLayout[row][col] = MapData::barePath;
         }
@@ -120,6 +122,11 @@ void PacMan::action()
             obj.pos.x += obj.speed;
             break;
         }
+    }
+
+    // turn off powerful if time elapsed
+    if (millis() - powerTimeStart >= powerTimeDuration) {
+        powerful = false;
     }
     // Serial.println("X: " + String(obj.pos.x) + "Y: " + String(obj.pos.x));
 }
