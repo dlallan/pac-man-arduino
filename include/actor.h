@@ -25,10 +25,12 @@ protected:
   objectInfo obj;
   bool isWhole(float f)
   {
-    return (fabs(f - round(f)) < 0.04);
+    // Check if the float is with 0.03 of a whole tile
+    return (fabs(f - round(f)) < 0.03);
   }
   int near(float f)
   {
+    // Get the int of the input float
     return int(round(f));
   }
 };

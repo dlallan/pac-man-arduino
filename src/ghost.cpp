@@ -10,78 +10,86 @@ Ghost::Ghost()
 }
 
 void Ghost::action() {
-    if (atIntersection())
+    // TODO: add Frightened movement behavior 
+    if(isWhole(obj.pos.x) && isWhole(obj.pos.y))
     {
-        // get next tile from pac-man's current position
-        CoordinatesF pacPosF = pac.draw().pos;
-        setTargetTile({near(pacPosF.x), near(pacPosF.y)}); // row, col pair!
-        
-        // use BFS search to get next tile in min-path
-        Coordinates myPos = {near(obj.pos.x), near(obj.pos.y)};
-        // BFS uses row col pairs, so swap x and y as needed
-        Coordinates nextTile = BFS({myPos.y, myPos.x}, {targetTile.y, targetTile.x});
-        nextTile = {nextTile.y, nextTile.x};
+        if (atIntersection()) {
+            // get next tile from pac-man's current position
+            CoordinatesF pacPosF = pac.draw().pos;
+            setTargetTile({near(pacPosF.x), near(pacPosF.y)}); // row, col pair!
+            
+            // use BFS search to get next tile in min-path
+            // Coordinates myPos = {near(obj.pos.x), near(obj.pos.y)};
+            lastTile = currentTile;
+            currentTile.x = near(obj.pos.x);
+            currentTile.y = near(obj.pos.y);
+            // BFS uses row col pairs, so swap x and y as needed
+            Coordinates nextTile = BFS({currentTile.y, currentTile.x}, 
+                {targetTile.y, targetTile.x});
+            nextTile = {nextTile.y, nextTile.x};
 
-        // set new direction for ghost
-        if (nextTile.x > myPos.x) {
-            obj.dir = RIGHT;
+            // set new direction for ghost
+            if (nextTile.x > currentTile.x) {
+                obj.dir = RIGHT;
+            }
+            else if (nextTile.x < currentTile.x) {
+                obj.dir = LEFT;
+            }
+            else if (nextTile.y > currentTile.y) {
+                obj.dir = DOWN;
+            }
+            else if (nextTile.y < currentTile.y) {
+                obj.dir = UP;
+            }
+            
+            // move in new direction
+            switch (obj.dir) {
+                case UP:
+                    obj.pos.y -= obj.speed;
+                    break;
+                case DOWN:
+                    obj.pos.y += obj.speed;
+                    break;
+                case LEFT:
+                    obj.pos.x -= obj.speed;
+                    break;
+                case RIGHT:
+                    obj.pos.x += obj.speed;
+                    break;
+            }
         }
-        else if (nextTile.x < myPos.x) {
-            obj.dir = LEFT;
-        }
-        else if (nextTile.y > myPos.y) {
-            obj.dir = DOWN;
-        }
-        else if (nextTile.y < myPos.y) {
-            obj.dir = UP;
-        }
-        
-        // move in new direction
-        switch (obj.dir)
-        {
-        case UP:
-            obj.pos.y -= obj.speed;
-            break;
-        case DOWN:
-            obj.pos.y += obj.speed;
-            break;
-        case LEFT:
-            obj.pos.x -= obj.speed;
-            break;
-        case RIGHT:
-            obj.pos.x += obj.speed;
-            break;
+        else {
+            // no choice but to move forward
+            followPath(); 
         }
     }
-    else
+    moveForward(); // keep moving to next tile in current direction
+}
+
+void Ghost::followPath()
+{
+    int row = near(obj.pos.y);
+    int col = near(obj.pos.x);
+
+    if (obj.dir != UP && isValid(row + 1, col))
     {
-        moveForward();
+        obj.dir = DOWN;
+    }
+    else if (obj.dir != DOWN && isValid(row - 1, col))
+    {
+        obj.dir = UP;
+    }
+    else if (obj.dir != LEFT && isValid(row, col + 1))
+    {
+        obj.dir = RIGHT;
+    }
+    else if (obj.dir != RIGHT && isValid(row, col - 1))
+    {
+        obj.dir = LEFT;
     }
 }
 
 void Ghost::moveForward() {
-    if (isWhole(obj.pos.x) && isWhole(obj.pos.y))
-    {
-        int row = near(obj.pos.y);
-        int col = near(obj.pos.x);
-
-        if (obj.dir != UP && isValid(row + 1, col))
-        {
-            obj.dir = DOWN;
-        }
-        else if (obj.dir != DOWN && isValid(row - 1, col))
-        {
-            obj.dir = UP;
-        }
-        else if (obj.dir != LEFT && isValid(row, col + 1))
-        {
-            obj.dir = RIGHT;
-        }
-        else if (obj.dir != RIGHT && isValid(row, col - 1))
-        {
-            obj.dir = LEFT;
-        }
-    }
     switch (obj.dir)
     {
     case UP:
@@ -114,11 +122,6 @@ bool Ghost::isValid(int16_t row, int16_t col) {
 }
 
 bool Ghost::atIntersection() {
-    // only valid when ghost position is directly on a tile
-    if (!isWhole(obj.pos.x) || !isWhole(obj.pos.y)) {
-        return false;
-    }
-
     // check surrounding tiles (ghost cannot reverse direction )
     int row = near(obj.pos.y);
     int col = near(obj.pos.x);

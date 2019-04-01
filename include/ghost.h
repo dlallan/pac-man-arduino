@@ -41,6 +41,8 @@ class Ghost : public Actor {
         // set target tile member
         void setTargetTile(Coordinates pos);
 
+        bool reDrawTile;
+        Coordinates lastTile;
     protected:
         // where the ghost wants to go
         Coordinates targetTile;
@@ -48,9 +50,12 @@ class Ghost : public Actor {
         // where to go in scatter mode
         Coordinates homeTile;
 
+        Coordinates currentTile;
         // determines movement style of ghost
         int8_t currentMode = Ghost::Scatter;
     private:
+
+        void followPath();
         void moveForward();
 };
 
