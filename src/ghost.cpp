@@ -9,39 +9,47 @@ Ghost::Ghost()
 }
 
 void Ghost::action() {
-    if (atIntersection())
+    if(isWhole(obj.pos.x) && isWhole(obj.pos.y))
     {
-        moveForward(); // It will need a proper choice for getting the direction
+        lastTile = currentTile;
+        currentTile.x = near(obj.pos.x);
+        currentTile.y = near(obj.pos.y);
+        if (atIntersection())
+        {
+           followPath();  // change to a new direction
+        }
+        else
+        {
+           followPath(); 
+        }
     }
-    else
+    moveForward();
+}
+
+void Ghost::followPath()
+{
+    int row = near(obj.pos.y);
+    int col = near(obj.pos.x);
+
+    if (obj.dir != UP && isValid(row + 1, col))
     {
-        moveForward();
+        obj.dir = DOWN;
+    }
+    else if (obj.dir != DOWN && isValid(row - 1, col))
+    {
+        obj.dir = UP;
+    }
+    else if (obj.dir != LEFT && isValid(row, col + 1))
+    {
+        obj.dir = RIGHT;
+    }
+    else if (obj.dir != RIGHT && isValid(row, col - 1))
+    {
+        obj.dir = LEFT;
     }
 }
 
 void Ghost::moveForward() {
-    if (isWhole(obj.pos.x) && isWhole(obj.pos.y))
-    {
-        int row = near(obj.pos.y);
-        int col = near(obj.pos.x);
-
-        if (obj.dir != UP && isValid(row + 1, col))
-        {
-            obj.dir = DOWN;
-        }
-        else if (obj.dir != DOWN && isValid(row - 1, col))
-        {
-            obj.dir = UP;
-        }
-        else if (obj.dir != LEFT && isValid(row, col + 1))
-        {
-            obj.dir = RIGHT;
-        }
-        else if (obj.dir != RIGHT && isValid(row, col - 1))
-        {
-            obj.dir = LEFT;
-        }
-    }
     switch (obj.dir)
     {
     case UP:
@@ -74,11 +82,6 @@ bool Ghost::isValid(int16_t row, int16_t col) {
 }
 
 bool Ghost::atIntersection() {
-    // only valid when ghost position is directly on a tile
-    if (!isWhole(obj.pos.x) || !isWhole(obj.pos.y)) {
-        return false;
-    }
-
     // check surrounding tiles (ghost cannot reverse direction )
     int row = near(obj.pos.y);
     int col = near(obj.pos.x);
