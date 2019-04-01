@@ -26,7 +26,7 @@ bool isValid(int row, int col)
 // These arrays are used to get row and column 
 // numbers of 4 neighbours of a given cell 
 int rowNum[] = {-1, 0, 0, 1}; 
-int colNum[] = {0, -1, 1, 0};
+int colNum[] = {0, 1, -1, 0};
 
 Coordinates BFS(/* int mat[][COL], */ Coordinates src, Coordinates dest) 
 { 

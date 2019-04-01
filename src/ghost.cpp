@@ -14,9 +14,10 @@ void Ghost::action() {
     if(isWhole(obj.pos.x) && isWhole(obj.pos.y))
     {
         if (atIntersection()) {
-            if (currentMode == mode::Chase) {
+            CoordinatesF pacPosF = pac.draw().pos;
+            if (currentMode == mode::Chase && !(near(pacPosF.x) == near(obj.pos.x) && near(pacPosF.y) == near(obj.pos.y) )) {
                 // get next tile from pac-man's current position
-                CoordinatesF pacPosF = pac.draw().pos;
+                //CoordinatesF pacPosF = pac.draw().pos;
                 setTargetTile({near(pacPosF.x), near(pacPosF.y)}); // row, col pair!
                 
                 // use BFS search to get next tile in min-path
@@ -45,37 +46,116 @@ void Ghost::action() {
             }
             else if (currentMode == mode::Frightened) {
                 // get a pseudorandom direction
-                this->obj.dir = random(0,4);              
+                randomPath();           
             }
-            
-            // move in new direction
-            switch (obj.dir) {
-                case UP:
-                    obj.pos.y -= obj.speed;
-                    break;
-                case DOWN:
-                    obj.pos.y += obj.speed;
-                    break;
-                case LEFT:
-                    obj.pos.x -= obj.speed;
-                    break;
-                case RIGHT:
-                    obj.pos.x += obj.speed;
-                    break;
+            else
+            {
+                followPath();    
             }
+           
         }
         else {
             // no choice but to move forward
             followPath(); 
         }
+        
     }
     moveForward(); // keep moving to next tile in current direction
 }
+
+
+void Ghost::randomPath()
+{
+    int row = near(obj.pos.y);
+    int col = near(obj.pos.x);
+    int ran = analogRead(A7)%4;
+    Serial.println("Dir: " + String(ran));
+    switch (ran)
+    {
+    case UP:
+        if (isValid(row - 1, col))
+        {
+            obj.dir = UP;
+        }
+        else if (isValid(row, col - 1))
+        {
+            obj.dir = LEFT;
+        }
+        else if (isValid(row + 1, col))
+        {
+            obj.dir = DOWN;
+        }
+        else if (isValid(row, col + 1))
+        {
+            obj.dir = RIGHT;
+        }
+        break;
+    case DOWN:
+        if (isValid(row + 1, col))
+        {
+            obj.dir = DOWN;
+        }
+        else if (isValid(row, col + 1))
+        {
+            obj.dir = RIGHT;
+        }
+        else if (isValid(row - 1, col))
+        {
+            obj.dir = UP;
+        }
+        else if (isValid(row, col - 1))
+        {
+            obj.dir = LEFT;
+        }
+        break;
+    case LEFT:
+        if (isValid(row, col - 1))
+        {
+            obj.dir = LEFT;
+        }
+        else if (isValid(row + 1, col))
+        {
+            obj.dir = DOWN;
+        }
+        else if (isValid(row, col + 1))
+        {
+            obj.dir = RIGHT;
+        }
+        else if (isValid(row - 1, col))
+        {
+            obj.dir = UP;
+        }
+        
+        
+        break;
+    case RIGHT:
+        if (isValid(row, col + 1))
+        {
+            obj.dir = RIGHT;
+        }
+        else if (isValid(row - 1, col))
+        {
+            obj.dir = UP;
+        }
+        else if (isValid(row, col - 1))
+        {
+            obj.dir = LEFT;
+        }
+        else if (isValid(row + 1, col))
+        {
+            obj.dir = DOWN;
+        }
+        
+        break;
+    }
+}
+
 
 void Ghost::followPath()
 {
     int row = near(obj.pos.y);
     int col = near(obj.pos.x);
+
 
     if (obj.dir != UP && isValid(row + 1, col))
     {
@@ -96,6 +176,7 @@ void Ghost::followPath()
 }
 
 void Ghost::moveForward() {
+    
     switch (obj.dir)
     {
     case UP:

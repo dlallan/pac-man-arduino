@@ -59,7 +59,9 @@ class Ghost : public Actor {
         mode currentMode = mode::Chase;
 
     private:
-
+        int rowNum[4] = {-1, 0, 0, 1}; 
+        int colNum[4] = {0, 1, -1, 0};
+        void randomPath();
         void followPath();
         void moveForward();
 };
