@@ -3,9 +3,9 @@
 #include "BFS.h"
 Ghost::Ghost()
 {
-    obj.pos.x = 13.5f; // Col
+    obj.pos.x = 14.0f; // Col
     obj.pos.y = 11.0f; // Row
-    obj.speed = 0.05f;
+    obj.speed = 0.1f;
     obj.dir = LEFT;
 }
 
@@ -13,6 +13,9 @@ void Ghost::action() {
     // TODO: add Frightened movement behavior 
     if(isWhole(obj.pos.x) && isWhole(obj.pos.y))
     {
+        lastTile = currentTile;
+        currentTile.x = near(obj.pos.x);
+        currentTile.y = near(obj.pos.y);
         if (atIntersection()) {
             CoordinatesF pacPosF = pac.draw().pos;
             if (currentMode == mode::Chase && !(near(pacPosF.x) == near(obj.pos.x) && near(pacPosF.y) == near(obj.pos.y) )) {
@@ -22,9 +25,6 @@ void Ghost::action() {
                 
                 // use BFS search to get next tile in min-path
                 // Coordinates myPos = {near(obj.pos.x), near(obj.pos.y)};
-                lastTile = currentTile;
-                currentTile.x = near(obj.pos.x);
-                currentTile.y = near(obj.pos.y);
                 // BFS uses row col pairs, so swap x and y as needed
                 Coordinates nextTile = BFS({currentTile.y, currentTile.x}, 
                     {targetTile.y, targetTile.x});
@@ -50,7 +50,7 @@ void Ghost::action() {
             }
             else
             {
-                followPath();    
+                randomPath();   
             }
            
         }
@@ -69,7 +69,7 @@ void Ghost::randomPath()
     int row = near(obj.pos.y);
     int col = near(obj.pos.x);
     int ran = analogRead(A7)%4;
-    Serial.println("Dir: " + String(ran));
+    // Serial.println("Dir: " + String(ran));
     switch (ran)
     {
     case UP:

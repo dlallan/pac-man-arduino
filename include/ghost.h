@@ -44,7 +44,7 @@ class Ghost : public Actor {
 
         bool reDrawTile;
         Coordinates lastTile;
-
+        Coordinates currentTile;
     protected:
         // where the ghost wants to go
         Coordinates targetTile;
@@ -52,7 +52,6 @@ class Ghost : public Actor {
         // where to go in scatter mode
         Coordinates homeTile;
 
-        Coordinates currentTile;
 
         // determines movement style of ghost
         // (chase is default)

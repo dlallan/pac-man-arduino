@@ -278,7 +278,7 @@ class LivesBar {
 
 /* static */ void DrawMap::drawDot(PDQ_ILI9341 * tft, uint16_t x, uint16_t y) {
   // fill tile first
-  drawPath(tft, x, y);
+  
 
   // draw dot on top of rectangle
   tft->fillRect(x + dotOffset, y + dotOffset, 
@@ -289,7 +289,6 @@ class LivesBar {
 /* static  */void DrawMap::drawPowerPellet(PDQ_ILI9341 * tft, uint16_t x, 
   uint16_t y) {
   // fill tile first
-  drawPath(tft, x, y);
 
   // draw power pellet on top of rectangle
   tft->fillRect(x + pelletXOffset, y + pelletYOffset, 
@@ -314,11 +313,15 @@ class LivesBar {
           break;
 
         case dot: // draw dot on tile
+          drawPath(tft, mapStartX + c*tileSize, 
+              mapStartY + r*tileSize);
           drawDot(tft, mapStartX + c*tileSize, 
               mapStartY + r*tileSize);
           break;
 
         case powerPellet: // draw power pellet on tile 
+          drawPath(tft, mapStartX + c*tileSize, 
+              mapStartY + r*tileSize);
           drawPowerPellet(tft, mapStartX + c*tileSize, 
               mapStartY + r*tileSize);
           break;

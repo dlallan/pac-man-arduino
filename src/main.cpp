@@ -76,6 +76,34 @@ void drawRed(){
   else {
     redShapeP->drawShape(&tft);
   }
+  int c = red.lastTile.x;
+  int r = red.lastTile.y;
+  int t = myMap.mapLayout[r][c];
+  if (t == 1)
+  {
+    DrawMap::drawDot(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
+              DrawMap::mapStartY + r*DrawMap::tileSize);
+  }
+  else if (t == 2)
+  {
+    DrawMap::drawPowerPellet(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
+              DrawMap::mapStartY + r*DrawMap::tileSize);
+  }
+  /*
+  c = red.currentTile.x;
+  r = red.currentTile.y;
+  t = myMap.mapLayout[r][c];
+  if (t == 1)
+  {
+    DrawMap::drawDot(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
+              DrawMap::mapStartY + r*DrawMap::tileSize);
+  }
+  else if (t == 2)
+  {
+    DrawMap::drawPowerPellet(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
+              DrawMap::mapStartY + r*DrawMap::tileSize);
+  }
+  */
 }
 
 void drawGhosts() {
