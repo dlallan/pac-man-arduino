@@ -172,7 +172,7 @@ class PacManShape : public Shape {
 class GhostShape : public Shape {
   public:
     // user must provide initial position and color for a ghost
-    GhostShape(Coordinates pos, int16_t color) : Shape(pos, SCALE,
+    GhostShape(Coordinates pos, int16_t color) : Shape(pos, SCALE-2,
     color) {};
 };
 

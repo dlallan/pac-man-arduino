@@ -33,6 +33,20 @@ Ghost test;
 //   - map tiles may change if pac-man eats a pellet or dot.
 //   - score may increase for same reason.
 //   - remaining lives may decrease if a ghost eats pacman
+
+
+void updateGhosts(){
+  
+}
+
+void drawGhost(){
+  Coordinates cord;
+  cord.x = test.draw().pos.x*SCALE + SCALE + 2;
+  cord.y = test.draw().pos.y*SCALE + 4*SCALE + 1;
+  redShapeP->setPosition(cord);
+  redShapeP->drawShape(&tft);
+}
+
 void updatePacMan() {
   pac.action();
 
@@ -45,11 +59,6 @@ void drawPacMan() {
   cord.y = pac.draw().pos.y*SCALE + 4*SCALE + 1;
   pacShapeP->setPosition(cord);
   pacShapeP->drawShape(&tft);
-
-  cord.x = test.draw().pos.x*SCALE + SCALE + 2;
-  cord.y = test.draw().pos.y*SCALE + 4*SCALE + 1;
-  redShapeP->setPosition(cord);
-  redShapeP->drawShape(&tft);
 }
 
 void drawScoreBar() {
@@ -105,6 +114,7 @@ void update() {
 
 void draw() {
   drawPacMan();
+  drawGhost();
   // pacShape.setPosition();
   // drawPacMan();
   // drawGhosts();
