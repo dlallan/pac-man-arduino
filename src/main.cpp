@@ -36,6 +36,18 @@ Ghost red;
 //   - remaining lives may decrease if a ghost eats pacman
 
 
+// show game over message on screen
+void drawGameOver() {
+  tft.fillRect(InfoBarData::bottomBarLabelPos.x, 
+    InfoBarData::bottomBarLabelPos.y, Display::width, FONT_HEIGHT, 
+    ILI9341_BLACK);
+
+  tft.setCursor(InfoBarData::bottomBarLabelPos.x, 
+    InfoBarData::bottomBarLabelPos.y);
+  
+  tft.print("GAME OVER");
+}
+
 // update score display
 void updateScore() {
   ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos, game.getScore());
@@ -74,7 +86,7 @@ void drawScoreBar() {
   ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos, game.getScore());
 }
 
-void drawInfoBar() {
+void drawLivesBar() {
   LivesBar::drawLabel(&tft, InfoBarData::bottomBarLabelPos, InfoBarData::livesLabel);
   LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, game.getRemainingLives());
 }
@@ -106,12 +118,10 @@ void setup() {
 
   // LivesBar::drawLabel(&tft, InfoBarData::bottomBarLabelPos, InfoBarData::livesLabel);
   // LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, game.getRemainingLives());
-  drawInfoBar();
+  drawLivesBar();
 
   /* Global controller */
 }
-
-
 
 void update() {
   updatePacMan();
@@ -162,9 +172,14 @@ bool running() {
   
   update();
   draw();
-  //}
+  
+  // check for game over
+  if (game.isGameOver()) {
+    drawGameOver();
+    while (true) {} // restart arduino to play again
+  }
+
   delay(FRAME_DELAY);
-  // if (gameOver) return false;
   return true;
 }
 

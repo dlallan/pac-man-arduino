@@ -6,10 +6,6 @@ Game::Game(int16_t lives /*= 3*/) {
 
 Game::~Game() {}
 
-bool Game::checkGameOver() {
-    return lives < 1;
-}
-
 int16_t Game::getRemainingLives() {
     return lives;
 }
@@ -36,4 +32,9 @@ void Game::pauseGame() {
 
 void Game::resumeGame() {
     paused = false;
+}
+
+bool Game::isGameOver() {
+    if (lives < 1 || score == maxScore) return true;
+    return false;
 }

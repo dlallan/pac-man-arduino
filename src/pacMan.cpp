@@ -121,6 +121,4 @@ void PacMan::action()
         }
     }
     // Serial.println("X: " + String(obj.pos.x) + "Y: " + String(obj.pos.x));
-
-    
 }

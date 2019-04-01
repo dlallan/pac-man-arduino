@@ -5,7 +5,7 @@ Ghost::Ghost()
 {
     obj.pos.x = 13.5f; // Col
     obj.pos.y = 11.0f; // Row
-    obj.speed = 0.1f;
+    obj.speed = 0.05f;
     obj.dir = LEFT;
 }
 

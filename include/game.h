@@ -8,9 +8,8 @@ class Game {
         Game(int16_t lives = 3);
         ~Game();
 
-        // check for Game Over condition
-        // (returns true if game over, false otherwise)
-        bool checkGameOver();
+        // check if out of lives or at max score
+        bool isGameOver();
 
         // gets value of lives member
         int16_t getRemainingLives();

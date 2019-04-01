@@ -84,7 +84,7 @@ Coordinates BFS(/* int mat[][COL], */ Coordinates src, Coordinates dest)
             if (isValid(row, col) && 
                 (myMap.mapLayout[row][col] != MapData::wall && 
                 myMap.mapLayout[row][col] != MapData::nonPlayArea) && 
-                !visited[row][col]) 
+                !visited[row][col])
             { 
                 // save the node's coordinates in the searchMap
                 searchMap[row][col] = curr.pt;
