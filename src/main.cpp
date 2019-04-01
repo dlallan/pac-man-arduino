@@ -26,8 +26,8 @@ GhostShape * pinkShapeP = &pinkShape;
 GhostShape orangeShape(GhostData::orangeInitialPos, GhostData::orangeColor);
 GhostShape * orangeShapeP = &orangeShape;
 
-PacMan pac;
-Ghost test;
+// PacMan pac;
+Ghost red;
 
 // update state of PacMan
 // side effects: 
@@ -36,22 +36,24 @@ Ghost test;
 //   - remaining lives may decrease if a ghost eats pacman
 
 
+// update state of the four ghosts
 void updateGhosts(){
-  
+  red.action();
 }
 
-void drawGhost(){
+void drawRed(){
   Coordinates cord;
-  cord.x = test.draw().pos.x*SCALE + SCALE + 2;
-  cord.y = test.draw().pos.y*SCALE + 4*SCALE + 1;
+  cord.x = red.draw().pos.x*SCALE + SCALE + 2;
+  cord.y = red.draw().pos.y*SCALE + 4*SCALE + 1;
   redShapeP->setPosition(cord);
   redShapeP->drawShape(&tft);
 }
 
+void drawGhosts() {
+  drawRed();
+}
 void updatePacMan() {
   pac.action();
-
-  test.action();
 }
 
 void drawPacMan() {
@@ -108,18 +110,19 @@ void setup() {
 
 void update() {
   updatePacMan();
-  // updateGhosts();
+  updateGhosts();
   // updateScore();
   // updateLives();
 }
 
 void draw() {
   drawPacMan();
-  drawGhost();
-  // pacShape.setPosition();
-  // drawPacMan();
-  // drawGhosts();
+  drawGhosts();
+
+  // draw new score if needed
   // drawTopBar();
+
+  // draw remaining lives if needed
   // drawBottomBar();
 }
 
@@ -158,16 +161,6 @@ int main() {
     setup();
     while (running()); 
 
-    // Coordinates source = {1, 1}; 
-    // Coordinates dest = {29, 26}; 
-    // unsigned long start = millis();
-    // Coordinates nextTile = BFS(source, dest); 
-    // Serial.print("Next tile is ");
-    // Serial.print(nextTile.y);
-    // Serial.print(",");
-    // Serial.println(nextTile.x);
-    // Serial.print("time in ms: ");
-    // Serial.println(millis()-start);
     Serial.end();
     return 0;
 }

@@ -35,6 +35,12 @@ class Ghost : public Actor {
         // Returns true if at intersection
         bool atIntersection();
 
+        // // set home tile member
+        // void setHomeTile(Coordinates & pos);
+
+        // set target tile member
+        void setTargetTile(Coordinates pos);
+
     protected:
         // where the ghost wants to go
         Coordinates targetTile;

@@ -23,9 +23,9 @@ Remaining Tasks
         - get current tile from center of pac-man
 
     Ghost movement
-        - A* or Dijkstra
+        - A* or Dijkstra [DONE]
         - Ghost house at start 
-            - 3 inside, 1 (red) outside
+            - 3 inside, 1 (red) outside [DONE]
             - time release or points-based release mechanism?
         - Each ghost uses pathfinding algorithm to determine next tile
         - use simplified graph from website
