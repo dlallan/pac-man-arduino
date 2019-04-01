@@ -1,19 +1,17 @@
 // source: https://www.geeksforgeeks.org/shortest-path-in-a-binary-maze/
-// Runtime complexity: O(M*N) for an M by N matrix
+// with modifications made by us for this project.
+#include "BFS.h"
+#include "global.h"
 #include <Arduino.h>
-#include "coordinates.h"
 #include "gameConfig.h"
 #include "linked_list.h"
-
-#define ROW Y_BOUND
-#define COL X_BOUND
 
 // A Data Structure for queue used in BFS 
 struct queueNode 
 { 
     Coordinates pt;  // The cordinates of a cell 
     int dist;  // cell's distance of from the source 
-}; 
+};
   
 // check whether given cell (row, col) is a valid 
 // cell or not. 
@@ -30,23 +28,19 @@ bool isValid(int row, int col)
 int rowNum[] = {-1, 0, 0, 1}; 
 int colNum[] = {0, -1, 1, 0};
 
-// function to find the shortest path between 
-// a given source cell to a destination cell. 
-int BFS(int mat[][COL], Coordinates src, Coordinates dest) 
+Coordinates BFS(/* int mat[][COL], */ Coordinates src, Coordinates dest) 
 { 
-    // check source and destination cell 
-    // of the matrix have value 1 
-    if (!mat[src.x][src.y] || !mat[dest.x][dest.y]) 
-        return -1; 
-  
-    bool visited[ROW][COL]; 
+    bool visited[Y_BOUND][X_BOUND]; 
     memset(visited, false, sizeof visited); 
       
     // Mark the source cell as visited 
-    visited[src.x][src.y] = true; 
+    visited[src.x][src.y] = true;
   
-    // Create a queue for BFS 
-    LinkedList<queueNode> ll; 
+    // Create a queue for BFS (we're using a linked list for this)
+    LinkedList<queueNode> ll;
+
+    // Use this grid to store previous tile in searchMap[x][y]
+    Coordinates searchMap[Y_BOUND][X_BOUND]; 
       
     // Distance of source cell is 0 
     queueNode s = {src, 0}; 
@@ -59,14 +53,27 @@ int BFS(int mat[][COL], Coordinates src, Coordinates dest)
         Coordinates pt = curr.pt; 
   
         // If we have reached the destination cell, 
-        // we are done 
-        if (pt.x == dest.x && pt.y == dest.y) 
-            return curr.dist; 
-  
+        // we can step backwards through the search map to find
+        // the next tile we need to visit.
+        if (pt.x == dest.x && pt.y == dest.y) {
+            int row = pt.x, col = pt.y;
+            while (searchMap[row][col].x != src.x 
+                || searchMap[row][col].y != src.y) {
+                row = searchMap[row][col].x;
+                col = searchMap[row][col].y;
+                if (!isValid(row, col)) {
+                    // Something went wrong. Send an impossible value.
+                    return {0,0};
+                }
+            }
+            
+            return {row, col};
+        }
+
         // Otherwise dequeue the front cell in the queue 
         // and enqueue its adjacent cells 
-        ll.removeBack();
-  
+        ll.removeFront();
+
         for (int i = 0; i < 4; i++) 
         { 
             int row = pt.x + rowNum[i]; 
@@ -74,9 +81,12 @@ int BFS(int mat[][COL], Coordinates src, Coordinates dest)
               
             // if adjacent cell is valid, has path and 
             // not visited yet, enqueue it. 
-            if (isValid(row, col) && mat[row][col] &&  
-               !visited[row][col]) 
+            if (isValid(row, col) && (myMap.mapLayout[row][col] != 0 && 
+                myMap.mapLayout[row][col] != 4) && !visited[row][col]) 
             { 
+                // save the node's coordinates in the searchMap
+                searchMap[row][col] = curr.pt;
+
                 // mark cell as visited and enqueue it 
                 visited[row][col] = true; 
                 queueNode Adjcell = { {row, col}, 
@@ -85,7 +95,9 @@ int BFS(int mat[][COL], Coordinates src, Coordinates dest)
             } 
         } 
     } 
-  
-    // Return -1 if destination cannot be reached 
-    return -1; 
+    
+    // ASSUME PATH IS ALWAYS REACHABLE FOR PAC-MAN
+    // // Return -1 if destination cannot be reached 
+    // return -1; 
+    return {0, 0};
 } 

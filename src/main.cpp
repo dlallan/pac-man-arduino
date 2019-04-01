@@ -8,6 +8,7 @@
 #include "global.h"
 #include "pacMan.h"
 #include "ghost.h"
+#include "BFS.h"
 
 PDQ_ILI9341 tft; 	// AF: create LCD object (HW SPI, CS=pin 10, D/C=pin 8, reset=9)
 bool run = true;
@@ -145,7 +146,18 @@ bool running() {
 // program entry point
 int main() {
     setup();
-    while (running());
+    while (running()); 
+
+    // Coordinates source = {1, 1}; 
+    // Coordinates dest = {29, 26}; 
+    // unsigned long start = millis();
+    // Coordinates nextTile = BFS(source, dest); 
+    // Serial.print("Next tile is ");
+    // Serial.print(nextTile.y);
+    // Serial.print(",");
+    // Serial.println(nextTile.x);
+    // Serial.print("time in ms: ");
+    // Serial.println(millis()-start);
     Serial.end();
     return 0;
 }
