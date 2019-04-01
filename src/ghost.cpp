@@ -3,8 +3,8 @@
 #include "BFS.h"
 Ghost::Ghost()
 {
-    obj.pos.x = 14.0f; // Col
-    obj.pos.y = 11.0f; // Row
+    obj.pos.x = 13.0f; // Col
+    obj.pos.y = 13.0f; // Row
     obj.speed = 0.1f;
     obj.dir = LEFT;
 }
@@ -29,20 +29,29 @@ void Ghost::action() {
                 Coordinates nextTile = BFS({currentTile.y, currentTile.x}, 
                     {targetTile.y, targetTile.x});
                 nextTile = {nextTile.y, nextTile.x};
-
+                // bool invalid = false;
                 // set new direction for ghost
+
                 if (nextTile.x > currentTile.x) {
                     obj.dir = RIGHT;
+                //   invalid = !isValid(currentTile.y,currentTile.x+1);
                 }
                 else if (nextTile.x < currentTile.x) {
                     obj.dir = LEFT;
+                //    invalid = !isValid(currentTile.y,currentTile.x-1);
                 }
                 else if (nextTile.y > currentTile.y) {
                     obj.dir = DOWN;
+                //    invalid = !isValid(currentTile.y+1,currentTile.x);
                 }
                 else if (nextTile.y < currentTile.y) {
                     obj.dir = UP;
+                //    invalid = !isValid(currentTile.y-1,currentTile.x);
                 }
+                // if (invalid)
+                // {
+                //   randomPath();
+                //}
             }
             else if (currentMode == mode::Frightened) {
                 // get a pseudorandom direction
@@ -52,13 +61,11 @@ void Ghost::action() {
             {
                 randomPath();   
             }
-           
         }
         else {
             // no choice but to move forward
             followPath(); 
         }
-        
     }
     moveForward(); // keep moving to next tile in current direction
 }
