@@ -8,12 +8,12 @@ Remaining Tasks
 
     Graphics
         - Start menu
-        - Pause menu (stop timer, wait for joystick click)
+        - Pause menu (stop timer, wait for joystick click) [DONE]
         - Game Over message w/ score
-        - animations for pac-man
+        - animations for pac-man [DONE]
             - Draw a yellow circle
         - animations for ghosts
-            - Draw colored squares
+            - Draw colored squares [DONE]
             - ghosts turn blue when pac-man eats power pellet
         - erase trail
     
@@ -35,7 +35,7 @@ Remaining Tasks
         - use Level 1 phases on website
         - Scatter mode
             - fixed "home" tile for each ghost OFFSCREEN (see image in link)
-            - each ghost uses their own pathfinding AI to reach home
+            - each ghost uses same pathfinding AI to reach their home tile
                 - results in loop behavior in four corners
         - Chase mode (in order of exiting ghost house)
             - Red (outside initially)

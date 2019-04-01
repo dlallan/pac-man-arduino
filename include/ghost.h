@@ -14,11 +14,12 @@ class Ghost : public Actor {
             Frightened // flee from pac-man (and turn blue)
         } mode;
 
-        Ghost() {};
+        // set home tile of ghost
+        Ghost(Coordinates &home);
         ~Ghost() {};
 
         // determine next state of ghost
-        void action();
+        virtual void action();
 
         // return value of panicked
         bool getFrightened();
@@ -39,8 +40,15 @@ class Ghost : public Actor {
         // where the ghost wants to go
         Coordinates targetTile;
 
+        // where to go in scatter mode
+        Coordinates homeTile;
+
         // determines movement style of ghost
         int8_t currentMode = Ghost::Scatter;
+
+        // true when ghost needs to calculate shortest path to target tile.
+        // false when ghost can move forward freely.
+        bool needsNewDirection = false;
 };
 
 #endif
