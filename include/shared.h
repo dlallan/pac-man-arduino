@@ -133,7 +133,6 @@ class Shape {
       this->pos = pos;
       this->size = size;
       this->color = color;
-      // this->velocity = {0, 0}; // begin stationary
     };
 
     // draw shape on touchscreen

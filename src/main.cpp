@@ -226,8 +226,8 @@ void restart() {
   myMap = MapData();
   pac = PacMan();
   red = Ghost(13.0f,11.0f,0.1f,DOWN,0);  //0 -> never makes a wrong turn
-  pink = Ghost(15.0f,16.0f,0.125f,UP,300);   // makes a wrong turn 20.0% of the time
-  blue = Ghost(15.0f,11.0f,0.125f,RIGHT,200);
+  pink = Ghost(15.0f,16.0f,0.125f,UP,300);   
+  blue = Ghost(15.0f,11.0f,0.125f,RIGHT,200); // makes a wrong turn 20.0% of the time
   orange = Ghost(13.0f,16.0f,0.125f,LEFT,100);
 
 
