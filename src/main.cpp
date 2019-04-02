@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------^/
  | Names: Dillon Allan and Amir Hansen                                       |
- | ID: 0000000 and 0000000                                                   |
+ | ID: 1350542 and 0000000                                                   |
  | CMPUT 275, Winter 2019                                                    | 
  | Final Project: Pac Man on Arduino                                         |
 /^---------------------------------------------------------------------------*/
@@ -25,16 +25,6 @@ GhostShape pinkShape(GhostData::pinkInitialPos, GhostData::pinkColor);
 GhostShape * pinkShapeP = &pinkShape;
 GhostShape orangeShape(GhostData::orangeInitialPos, GhostData::orangeColor);
 GhostShape * orangeShapeP = &orangeShape;
-
-// PacMan pac;
-// Ghost red;
-
-// update state of PacMan
-// side effects: 
-//   - map tiles may change if pac-man eats a pellet or dot.
-//   - score may increase for same reason.
-//   - remaining lives may decrease if a ghost eats pacman
-
 
 // show game over message on screen
 void drawGameOver() {
@@ -84,6 +74,7 @@ void drawRed(){
   redShapeP->setPosition(cord);
   if (red.getCurrentMode() == mode::Frightened) {
     redShapeP->drawPanickedGhost(&tft);
+
   }
   else {
     redShapeP->drawShape(&tft);
@@ -187,6 +178,12 @@ void drawGhosts() {
   drawPink();
   drawOrange();
 }
+
+// update state of PacMan
+// side effects: 
+//   - map tiles may change if pac-man eats a pellet or dot.
+//   - score may increase for same reason.
+//   - remaining lives may decrease if a ghost eats pacman
 void updatePacMan() {
   pac.action();
 }
@@ -214,7 +211,7 @@ void setup() {
   init();               // Arduino initialization
   /* The final product doesnt need serial com's its just going to be useful 
      for debugging */
-  Serial.begin(9600);   // Start serial session at 9600 baud rate
+  // Serial.begin(9600);   // Start serial session at 9600 baud rate
   randomSeed(analogRead(A7));
 
   tft.begin();
@@ -225,6 +222,7 @@ void setup() {
   // MapData::initMapLayout();
   DrawMap::drawMap(&tft);
   
+  // draw everyone in their starting positions
   pacShapeP->drawShape(&tft);
   redShapeP->drawShape(&tft);
   blueShapeP->drawShape(&tft);
@@ -232,18 +230,11 @@ void setup() {
   orangeShapeP->drawShape(&tft);
   
   // draw info bars
-  // ScoreBar::drawLabel(&tft, InfoBarData::topBarLabelPos, InfoBarData::scoreLabel);
-  // ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos, game.getScore());
   drawScoreBar();
-
-  // LivesBar::drawLabel(&tft, InfoBarData::bottomBarLabelPos, InfoBarData::livesLabel);
-  // LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, game.getRemainingLives());
   drawLivesBar();
-
-  /* Global controller */
 }
 
-
+// teleport everyone home
 void goHome()
 {
   pac.tpTo(23.0f,13.5f,LEFT);
@@ -252,17 +243,25 @@ void goHome()
   blue.tpTo(15.0f,11.0f,RIGHT);
   orange.tpTo(13.0f,16.0f,LEFT); 
 }
+
+// check ghost state against pac-man's state
 void checkGhost(Ghost &g)
 {
+  // pac-man and ghost are in a fight to the death,
+  // and only one can survive...
   if (touching(pac.draw().pos,g.draw().pos))
   {
+    // ghost kills pac-man :(
     if (g.getCurrentMode() != mode::Frightened)
     {
-      delay(500);
+      delay(Game::deathDelay); // give player time to react
       goHome();
       game.loseLife();
       game.livesChanged = true;
     }
+
+    // pac-man kills ghost :)
+    // send ghost home for a time out.
     else
     {
       g.tpTo(11.0f,13.0f,LEFT); 
@@ -272,26 +271,22 @@ void checkGhost(Ghost &g)
 }
 
 
-
+// check and update state of game
 void update() {
   updatePacMan();
   updateGhosts();
 
+  // compare ghost states to pac-man
   checkGhost(orange);
   checkGhost(blue);
   checkGhost(pink);
   checkGhost(red);
 
-  if (game.scoreChanged) {
-    updateScore();
-    game.scoreChanged = false;
-  }
-
-  if (game.livesChanged) {
-    updateLives();
-    game.livesChanged = false;
-  }
-
+  // early game conditions for releasing ghosts
+  //   - red is released immediately
+  //   - pink is released after 20 points
+  //   - blue is released after 35 points
+  //   - orange is released after 50 points
   if(game.getScore()>20 && pink.draw().pos == CoordinatesF({13.0f,13.0f}))
   {
     pink.tpTo(11.0f,13.0f,LEFT);
@@ -311,17 +306,24 @@ void update() {
 
 }
 
+// draw dynamic game elements
+// and update UI as needed
 void draw() {
   drawPacMan();
   drawGhosts();
 
-  // draw new score if needed
-  // drawTopBar();
+  if (game.scoreChanged) {
+    updateScore();
+    game.scoreChanged = false;
+  }
 
-  // draw remaining lives if needed
-  // drawBottomBar();
+  if (game.livesChanged) {
+    updateLives();
+    game.livesChanged = false;
+  }
 }
 
+// joystick click triggers pause game
 void checkPauseGame() {
   if (con.buttonTriggered())
     game.pauseGame();
@@ -353,7 +355,7 @@ bool running() {
     while (true) {} // restart arduino to play again
   }
 
-  delay(FRAME_DELAY);
+  delay(FRAME_DELAY); // maintain upper bound to frame rate
   return true;
 }
 
@@ -362,6 +364,6 @@ int main() {
     setup();
     while (running()); 
 
-    Serial.end();
+    // Serial.end(); // just for debugging
     return 0;
 }

@@ -21,8 +21,5 @@
 /* For the Joystick */
 #define DEAD_ZONE 64*64
 #define STICK_OFFSET 512
-#define JOY_VERT  A1 // should connect A1 to pin VRx
-#define JOY_HORIZ A0 // should connect A0 to pin VRy
-#define JOY_SEL   2
 
 #endif

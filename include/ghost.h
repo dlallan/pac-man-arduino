@@ -14,7 +14,7 @@ enum class mode {
 
 class Ghost : public Actor {
     public:
-        Ghost::Ghost(float row, float col, float spd,int dir,int err);
+        Ghost(float row, float col, float spd,int dir,int err);
         ~Ghost() {};
 
         // determine next state of ghost
@@ -45,6 +45,7 @@ class Ghost : public Actor {
         bool reDrawTile;
         Coordinates lastTile;
         Coordinates currentTile;
+
     protected:
         // where the ghost wants to go
         Coordinates targetTile;

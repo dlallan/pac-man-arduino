@@ -62,8 +62,11 @@ Wiring Instructions:
 Running Instructions:
     <Put list of instructions here.>
 
-References (for both server and client):
-    <Put descriptions+links here>
+References:
+    linked_list.h was given in class earlier this semester. We used it in an
+    implementation of a BFS algorithm for the ghost pathfinding behavior.
+
+    Some joystick code was reused 
 
     16-bit RGB565 Color Picker
     https://ee-programming-notepad.blogspot.com/2016/10/16-bit-color-generator-picker.html
@@ -73,3 +76,15 @@ References (for both server and client):
     
     C++ external variables
     https://stackoverflow.com/questions/249701/why-arent-my-compile-guards-preventing-multiple-definition-inclusions
+
+    BFS/Shortest Path for an MxN matrix
+    https://www.geeksforgeeks.org/shortest-path-in-a-binary-maze/
+
+    Pac-Man map design tips
+    https://shaunlebron.github.io/pacman-mazegen/
+
+    Pac-Man Ghost behavior and game rules
+    http://gameinternals.com/post/2072558330/understanding-pac-man-ghost-behavior
+
+    Arduino random function
+    https://www.arduino.cc/reference/en/language/functions/random-numbers/random/

@@ -1,6 +1,8 @@
 #include "ghost.h"
 #include "global.h"
 #include "BFS.h"
+
+// ctor for ghosts with initial position and other stats
 Ghost::Ghost(float row, float col, float spd,int dir,int err)
 {
     obj.pos.x = col; // Col

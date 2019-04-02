@@ -37,6 +37,8 @@ class Game {
         // raise or lower flag for new num lives to display
         bool livesChanged;
 
+        static const int16_t deathDelay = 500; // in milliseconds
+
     private:
         int16_t score = 0; // game score
         
