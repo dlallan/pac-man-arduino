@@ -273,27 +273,9 @@ void setup() {
   /* The final product doesnt need serial com's its just going to be useful 
      for debugging */
   // Serial.begin(9600);   // Start serial session at 9600 baud rate
-  randomSeed(analogRead(A7));
-
+  randomSeed(analogRead(A7)); // get new seed every time (in theory)
   tft.begin();
-  // tft.setTextSize(FONT_SIZE);
-
-  // // draw map
-  // Display::drawBackground(&tft);
-  // // MapData::initMapLayout();
-  // DrawMap::drawMap(&tft);
-  
-  // // draw everyone in their starting positions
-  // pacShapeP->drawShape(&tft);
-  // redShapeP->drawShape(&tft);
-  // blueShapeP->drawShape(&tft);
-  // pinkShapeP->drawShape(&tft);
-  // orangeShapeP->drawShape(&tft);
-  
-  // // draw info bars
-  // drawScoreBar();
-  // drawLivesBar();
-  restart();
+  restart(); // initialize game state
 }
 
 // teleport everyone home

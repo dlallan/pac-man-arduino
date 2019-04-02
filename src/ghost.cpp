@@ -13,7 +13,7 @@ Ghost::Ghost(float row, float col, float spd,int dir,int err)
 }
 
 void Ghost::action() {
-    // TODO: add Frightened movement behavior 
+    // check if ghost is directly on a tile
     if(isWhole(obj.pos.x) && isWhole(obj.pos.y))
     {
         lastTile = currentTile;
