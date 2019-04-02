@@ -6,28 +6,27 @@
 /^---------------------------------------------------------------------------*/
 #include <shared.h>
 #include "global.h"
-#include "pacMan.h"
-#include "ghost.h"
-#include "BFS.h"
 
 PDQ_ILI9341 tft; 	// AF: create LCD object (HW SPI, CS=pin 10, D/C=pin 8, reset=9)
 bool run = true;
 
-// TODO: put these globals in shared.h
-// They're here for testing only.
+
+// cast of the game
 PacManShape pacShape; // our hero
-PacManShape * pacShapeP = &pacShape; // pointer required for polymorphic draw
 GhostShape redShape(GhostData::redInitialPos, GhostData::redColor);
-GhostShape * redShapeP = &redShape;
 GhostShape blueShape(GhostData::blueInitialPos, GhostData::blueColor);
-GhostShape * blueShapeP = &blueShape;
 GhostShape pinkShape(GhostData::pinkInitialPos, GhostData::pinkColor);
-GhostShape * pinkShapeP = &pinkShape;
 GhostShape orangeShape(GhostData::orangeInitialPos, GhostData::orangeColor);
+
+// pointers required for polymorphism
+PacManShape * pacShapeP = &pacShape; 
+GhostShape * redShapeP = &redShape;
+GhostShape * blueShapeP = &blueShape;
+GhostShape * pinkShapeP = &pinkShape;
 GhostShape * orangeShapeP = &orangeShape;
 
 // show game over message on screen
-void drawGameOver() {
+void drawGameOver(bool winner) {
   tft.fillRect(InfoBarData::bottomBarLabelPos.x, 
     InfoBarData::bottomBarLabelPos.y, Display::width, FONT_HEIGHT, 
     ILI9341_BLACK);
@@ -35,7 +34,8 @@ void drawGameOver() {
   tft.setCursor(InfoBarData::bottomBarLabelPos.x, 
     InfoBarData::bottomBarLabelPos.y);
   
-  tft.print("GAME OVER");
+  if (winner) tft.print("YOU WIN!");
+  else tft.print("GAME OVER");
 }
 
 // update score display
@@ -217,20 +217,39 @@ void drawLivesBar() {
   LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, game.getRemainingLives());
 }
 
-// initialize our game variables
-void setup() {
-  init();               // Arduino initialization
-  /* The final product doesnt need serial com's its just going to be useful 
-     for debugging */
-  // Serial.begin(9600);   // Start serial session at 9600 baud rate
-  randomSeed(analogRead(A7));
+// initialize or re-initialize our important variables,
+// and restart game from initial state
+void restart() {
+  // initialize state variables
+  game = Game(3);
+  Controller con;
+  myMap = MapData();
+  pac = PacMan();
+  red = Ghost(13.0f,11.0f,0.1f,DOWN,0);  //0 -> never makes a wrong turn
+  pink = Ghost(15.0f,16.0f,0.125f,UP,300);   // makes a wrong turn 20.0% of the time
+  blue = Ghost(15.0f,11.0f,0.125f,RIGHT,200);
+  orange = Ghost(13.0f,16.0f,0.125f,LEFT,100);
 
-  tft.begin();
+
+  // initialize our crew
+  pacShape = PacManShape(); // our hero
+  redShape = GhostShape(GhostData::redInitialPos, GhostData::redColor);
+  blueShape = GhostShape(GhostData::blueInitialPos, GhostData::blueColor);
+  pinkShape = GhostShape(GhostData::pinkInitialPos, GhostData::pinkColor);
+  orangeShape = GhostShape(GhostData::orangeInitialPos, GhostData::orangeColor);
+  
+  // pointers required for polymorphism
+  pacShapeP = &pacShape; 
+  redShapeP = &redShape;
+  blueShapeP = &blueShape;
+  pinkShapeP = &pinkShape;
+  orangeShapeP = &orangeShape;
+
   tft.setTextSize(FONT_SIZE);
 
   // draw map
   Display::drawBackground(&tft);
-  // MapData::initMapLayout();
+  myMap.initMapLayout();
   DrawMap::drawMap(&tft);
   
   // draw everyone in their starting positions
@@ -243,6 +262,38 @@ void setup() {
   // draw info bars
   drawScoreBar();
   drawLivesBar();
+
+  delay(2000); // give the player some breathing room
+}
+
+
+// initialize our game variables
+void setup() {
+  init();               // Arduino initialization
+  /* The final product doesnt need serial com's its just going to be useful 
+     for debugging */
+  // Serial.begin(9600);   // Start serial session at 9600 baud rate
+  randomSeed(analogRead(A7));
+
+  tft.begin();
+  // tft.setTextSize(FONT_SIZE);
+
+  // // draw map
+  // Display::drawBackground(&tft);
+  // // MapData::initMapLayout();
+  // DrawMap::drawMap(&tft);
+  
+  // // draw everyone in their starting positions
+  // pacShapeP->drawShape(&tft);
+  // redShapeP->drawShape(&tft);
+  // blueShapeP->drawShape(&tft);
+  // pinkShapeP->drawShape(&tft);
+  // orangeShapeP->drawShape(&tft);
+  
+  // // draw info bars
+  // drawScoreBar();
+  // drawLivesBar();
+  restart();
 }
 
 // teleport everyone home
@@ -362,13 +413,15 @@ bool running() {
 
   // check for game over
   if (game.isGameOver()) {
-    drawGameOver();
-    while (true) {} // restart arduino to play again
-  }
-  if (game.getScore()>2 && game.getScore()%340 == 0)
-  {
-    myMap.initMapLayout();
-    DrawMap::drawMap(&tft);
+    // print winning or losing message
+    if (game.getScore() == Game::maxScore)
+      drawGameOver(true);
+    else  
+      drawGameOver(false);
+    
+    // click joystick to play again
+    while (!con.buttonTriggered()) {} 
+    restart();
   }
 
   delay(FRAME_DELAY); // maintain upper bound to frame rate

@@ -7,7 +7,7 @@
 #include <arduino.h>
 Controller con;
 MapData myMap;
-Game game;
+Game game(3); // 3 lives...
 PacMan pac;
 Ghost red(13.0f,11.0f,0.1f,DOWN,0);  //0 -> never makes a wrong turn
 Ghost pink(15.0f,16.0f,0.125f,UP,300);   // makes a wrong turn 20.0% of the time
@@ -19,4 +19,3 @@ bool touching(CoordinatesF a, CoordinatesF b)
     Serial.println((fabs(a.x-b.x) < 1 && fabs(a.y-b.y) < 1));
     return (fabs(a.x-b.x) < 0.5 && fabs(a.y-b.y) < 0.5);
 }
-// Ghost pink;

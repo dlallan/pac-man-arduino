@@ -9,7 +9,7 @@
 
 extern Controller con;
 extern MapData myMap;
-extern Game game;
+extern Game game; 
 extern PacMan pac;
 extern Ghost red;
 extern Ghost pink;

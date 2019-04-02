@@ -39,12 +39,13 @@ class Game {
 
         static const int16_t deathDelay = 500; // in milliseconds
 
+        // get this score to win the game
+        // (310 dots + 6 power pellets * 5 points per pellet)
+        static const int16_t maxScore = 340;
+    
     private:
         int16_t score = 0; // game score
         
-        // get this score to win the game
-        // (310 dots + 6 power pellets * 5 points per pellet)
-        const int16_t maxScore = 340;
         
         int16_t lives;     // player lives
         bool paused = false; // if true, then game should stop running

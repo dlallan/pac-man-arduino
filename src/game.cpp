@@ -35,6 +35,6 @@ void Game::resumeGame() {
 }
 
 bool Game::isGameOver() {
-    if (lives < 1) return true;
+    if (lives < 1 || score == Game::maxScore) return true;
     return false;
 }
