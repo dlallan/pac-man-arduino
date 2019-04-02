@@ -265,7 +265,7 @@ void checkGhost(Ghost &g)
     }
     else
     {
-      g.tpTo(11.0f,13.0f,LEFT); 
+      g.tpTo(13.0f,12.0f,LEFT); 
       g.setCurrentMode(mode::Chase);
     }
   }
