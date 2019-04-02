@@ -2,7 +2,7 @@
 #include "global.h"
 PacMan::PacMan()
 {
-    obj.pos.x = 13.5f; // Col
+    obj.pos.x = 14.0f; // Col
     obj.pos.y = 23.0f; // Row
     obj.dir = LEFT;
     obj.speed = 0.125; // Do everything wrt having things sum to 1.0 nice

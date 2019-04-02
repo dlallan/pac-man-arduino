@@ -248,7 +248,7 @@ void setup() {
 // teleport everyone home
 void goHome()
 {
-  pac.tpTo(23.0f,13.5f,LEFT);
+  pac.tpTo(23.0f,14.0f,LEFT);
   red.tpTo(13.0f,11.0f,DOWN);
   pink.tpTo(15.0f,16.0f,UP);
   blue.tpTo(15.0f,11.0f,RIGHT);
@@ -364,6 +364,11 @@ bool running() {
   if (game.isGameOver()) {
     drawGameOver();
     while (true) {} // restart arduino to play again
+  }
+  if (game.getScore()>2 && game.getScore()%340 == 0)
+  {
+    myMap.initMapLayout();
+    DrawMap::drawMap(&tft);
   }
 
   delay(FRAME_DELAY); // maintain upper bound to frame rate
