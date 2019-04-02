@@ -28,7 +28,7 @@ bool isValid(int row, int col)
 int rowNum[] = {-1, 0, 0, 1}; 
 int colNum[] = {0, 1, -1, 0};
 
-Coordinates BFS(/* int mat[][COL], */ Coordinates src, Coordinates dest) 
+Coordinates BFS(Coordinates src, Coordinates dest) 
 { 
     bool visited[Y_BOUND][X_BOUND]; 
     memset(visited, false, sizeof visited); 
