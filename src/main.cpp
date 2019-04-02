@@ -67,14 +67,23 @@ void updateGhosts(){
   runGhost(orange);
 }
 
+// toggles ghost color if in last moments of power pellet effect duration
+bool tryFrightenedToggle(GhostShape * gs) {
+  if (millis() - pac.powerTimeStart >= 2*PacMan::powerTimeDuration/3) {
+    gs->frightenedToggle = !gs->frightenedToggle;
+    return true;
+  }
+  return false;
+}
+
 void drawRed(){
   Coordinates cord;
   cord.x = red.draw().pos.x*SCALE + SCALE + 2;
   cord.y = red.draw().pos.y*SCALE + 4*SCALE + 1;
   redShapeP->setPosition(cord);
   if (red.getCurrentMode() == mode::Frightened) {
-    redShapeP->drawPanickedGhost(&tft);
-
+    if (tryFrightenedToggle(redShapeP)) redShapeP->drawTogglingGhost(&tft);
+    else redShapeP->drawPanickedGhost(&tft);
   }
   else {
     redShapeP->drawShape(&tft);
@@ -100,8 +109,8 @@ void drawBlue(){
   cord.y = blue.draw().pos.y*SCALE + 4*SCALE + 1;
   blueShapeP->setPosition(cord);
   if (blue.getCurrentMode() == mode::Frightened) {
-    blueShapeP->drawPanickedGhost(&tft);
-  }
+    if (tryFrightenedToggle(blueShapeP)) blueShapeP->drawTogglingGhost(&tft);
+    else blueShapeP->drawPanickedGhost(&tft);  }
   else {
     blueShapeP->drawShape(&tft);
   }
@@ -126,7 +135,8 @@ void drawPink(){
   cord.y = pink.draw().pos.y*SCALE + 4*SCALE + 1;
   pinkShapeP->setPosition(cord);
   if (pink.getCurrentMode() == mode::Frightened) {
-    pinkShapeP->drawPanickedGhost(&tft);
+    if (tryFrightenedToggle(pinkShapeP)) pinkShapeP->drawTogglingGhost(&tft);
+    else pinkShapeP->drawPanickedGhost(&tft);
   }
   else {
     pinkShapeP->drawShape(&tft);
@@ -152,7 +162,8 @@ void drawOrange(){
   cord.y = orange.draw().pos.y*SCALE + 4*SCALE + 1;
   orangeShapeP->setPosition(cord);
   if (orange.getCurrentMode() == mode::Frightened) {
-    orangeShapeP->drawPanickedGhost(&tft);
+    if (tryFrightenedToggle(orangeShapeP)) orangeShapeP->drawTogglingGhost(&tft);
+    else orangeShapeP->drawPanickedGhost(&tft);
   }
   else {
     orangeShapeP->drawShape(&tft);

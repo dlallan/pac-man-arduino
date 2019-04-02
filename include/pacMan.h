@@ -15,7 +15,7 @@ class PacMan: public Actor
         int powerful; // 0 when weak, 1 when start strong, 2 while waiting
 
         unsigned long powerTimeStart; // use with millis()
-        const unsigned long powerTimeDuration = 3000; // 3 seconds
+        static const unsigned long powerTimeDuration = 6000; // 3 seconds
 };
 
 #endif

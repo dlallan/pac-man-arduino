@@ -185,8 +185,16 @@ class GhostShape : public Shape {
       drawShape(tft, ILI9341_LIGHTBLUE);
     };
 
+    void drawTogglingGhost(PDQ_ILI9341 * tft) {
+      if (!frightenedToggle) drawShape(tft, ILI9341_LIGHTBLUE);
+      else drawShape(tft, color);
+    }
+
+    bool frightenedToggle;
+
   private:
     static const int16_t panickedColor = ILI9341_LIGHTBLUE;
+
 };
 
 // Shows current game score to user
