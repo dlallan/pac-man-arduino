@@ -1,3 +1,10 @@
+/*---------------------------------------------------------------------------^/
+ | Names: Dillon Allan and Amir Hansen                                       |
+ | ID: 0000000 and 0000001                                                   |
+ | CMPUT 275, Winter 2019                                                    | 
+ | Final Project: Pac Man on Arduino                                         |
+/^---------------------------------------------------------------------------*/
+/*Globals used throughout other game files.*/
 #ifndef GLOBAL_H
 #define GLOBAL_H
 #include "mapData.h"

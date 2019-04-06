@@ -4,15 +4,25 @@
  | CMPUT 275, Winter 2019                                                    | 
  | Final Project: Pac Man on Arduino                                         |
 /^---------------------------------------------------------------------------*/
-/* All pin definitions can be places here */
-#ifndef PINOUT_H
-#define PINOUT_H
+/*Base class for game actors (ghosts and pac-man).*/
+#include "actor.h"
 
-#include <Arduino.h>
+objectInfo Actor::draw() { 
+    return obj;
+}
 
-/* Joystick Wiring */
-#define VRx A1
-#define VRy A0
-#define SW 8
+void Actor::tpTo(float row, float col, int dir) {
+    obj.dir = dir;
+    obj.pos.x = col;
+    obj.pos.y = row;
+}
 
-#endif
+bool Actor::isWhole(float f) {
+    // Check if the float is within 0.03 of a whole tile
+    return (fabs(f - round(f)) < 0.03);
+}
+
+int Actor::near(float f) {
+    // Get the int of the input float
+    return int(round(f));
+}
