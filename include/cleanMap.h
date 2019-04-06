@@ -1,9 +1,16 @@
+/*---------------------------------------------------------------------------^/
+ | Names: Dillon Allan and Amir Hansen                                       |
+ | ID: 0000000 and 0000001                                                  |
+ | CMPUT 275, Winter 2019                                                    | 
+ | Final Project: Pac Man on Arduino                                         |
+/^---------------------------------------------------------------------------*/
+// default state of each tile in game map
 #ifndef CLEANMAP_H
 #define CLEANMAP_H
 #include <arduino.h>
 #include "gameConfig.h"
 
-/* static */ const uint8_t blankMap[][X_BOUND] = { 
+const uint8_t blankMap[][X_BOUND] = { 
 // 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2
 // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
   {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, // 0 top row
