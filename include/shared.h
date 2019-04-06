@@ -1,13 +1,13 @@
 /*---------------------------------------------------------------------------^/
  | Names: Dillon Allan and Amir Hansen                                       |
- | ID: 0000000 and 0000000                                                   |
+ | ID: 0000000 and 0000001                                                   |
  | CMPUT 275, Winter 2019                                                    | 
  | Final Project: Pac Man on Arduino                                         |
 /^---------------------------------------------------------------------------*/
 /* Shared Objects & Global Variables */
 // WARNING: PDQ library must only be included ONCE in your project to avoid
 // linker errors! That's why all our PDQ-related stuff is defined here, despite
-// this being a header file.
+// this being a header file. Not ideal, but it was necessary in this case.
 #ifndef _SHARED_H_
 #define _SHARED_H_
 
@@ -22,7 +22,6 @@
 #include "global.h"
 
 /// struct and class definitions
-
 
 // contains properties of tft screen
 struct Display {
@@ -129,23 +128,25 @@ struct GhostData {
 // base class for shapes that move in-game (ghosts and pac-man)
 class Shape {
   public:
+    // initialize in a given location with size and color
     Shape(Coordinates pos, int16_t size, int16_t color) {
       this->pos = pos;
       this->size = size;
       this->color = color;
     };
 
-    // draw shape on touchscreen
+    // draw shape on touchscreen and fill previous location 
+    // with display bg color
     void drawShape(PDQ_ILI9341 * tft) {
       // draw shape in current position
-      tft->fillRect(lastPos.x, lastPos.y, size, size, ILI9341_BLACK);
+      tft->fillRect(lastPos.x, lastPos.y, size, size, Display::bgColor);
       tft->fillRect(pos.x, pos.y, size, size, color);
-      
     };
 
+    // draw shape with custom color on-screen
     void drawShape(PDQ_ILI9341 * tft, int16_t col) {
       // draw shape in current position
-      tft->fillRect(lastPos.x, lastPos.y, size, size, ILI9341_BLACK);
+      tft->fillRect(lastPos.x, lastPos.y, size, size, Display::bgColor);
       tft->fillRect(pos.x, pos.y, size, size, col);
     };
 
@@ -180,18 +181,22 @@ class GhostShape : public Shape {
     GhostShape(Coordinates pos, int16_t color) : Shape(pos, SCALE-2,
     color) {};
 
+    // draw panicked ghost
     void drawPanickedGhost(PDQ_ILI9341 * tft) {
-      drawShape(tft, ILI9341_LIGHTBLUE);
+      drawShape(tft, panickedColor);
     };
 
+    // draw ghost with alternating colors to signal transition back to normal
     void drawTogglingGhost(PDQ_ILI9341 * tft) {
-      if (!frightenedToggle) drawShape(tft, ILI9341_LIGHTBLUE);
+      if (!frightenedToggle) drawShape(tft, panickedColor);
       else drawShape(tft, color);
     }
 
+    // toggle to draw panicked ghost
     bool frightenedToggle;
 
   private:
+    // used when ghost is in Panicked mode
     static const int16_t panickedColor = ILI9341_LIGHTBLUE;
 
 };
