@@ -1,8 +1,7 @@
-// Source: given in class for a weekly assignment
+// Source: given in class
 #ifndef _LINKED_LIST_H_
 #define _LINKED_LIST_H_
 #include <Arduino.h>
-// #include <cassert>
 
 using namespace std;
 
@@ -89,7 +88,6 @@ void LinkedList<T>::insertFront(const T& item) {
   // get a new ListNode to hold the item
   // it points back to NULL and ahead to the first node in current list
   ListNode<T> *node = new ListNode<T>(item, NULL, first);
-  // assert(node != NULL);
 
   // if the list is not empty, have the first node point back to the new node.
   if (first != NULL) {
@@ -112,7 +110,6 @@ void LinkedList<T>::insertFront(const T& item) {
 template<class T>
 void LinkedList<T>::insertBack(const T& item) {
   ListNode<T> *node = new ListNode<T>(item, last, NULL);
-  // assert(node != NULL);
 
   // if the list is not empty, have the last node point forward to the new node.
   if (last != NULL) {
@@ -139,7 +136,6 @@ void LinkedList<T>::insertBefore(const T& item, ListNode<T> *link) {
 
   // get a new node to hold this item
   ListNode<T> *node = new ListNode<T>(item, link->prev, link);
-  // assert(node != NULL);
 
   // redirect surrounding links, the order you do this is important!
   link->prev->next = node;
@@ -158,8 +154,6 @@ void LinkedList<T>::insertBefore(const T& item, ListNode<T> *link) {
 
 template <class T>
 void LinkedList<T>::removeFront() {
-  // assert(first != NULL);
-
   ListNode<T> *toDelete = first;
 
   // if this is not the only item in the list, redirect
@@ -181,8 +175,6 @@ void LinkedList<T>::removeFront() {
 
 template <class T>
 void LinkedList<T>::removeBack() {
-  // assert(first != NULL);
-
   ListNode<T> *toDelete = last;
 
   // if this is not the only item in the list, redirect
