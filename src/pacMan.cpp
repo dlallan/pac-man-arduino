@@ -1,5 +1,13 @@
+/*---------------------------------------------------------------------------^/
+ | Names: Dillon Allan and Amir Hansen                                       |
+ | ID: 0000000 and 0000001                                                   |
+ | CMPUT 275, Winter 2019                                                    | 
+ | Final Project: Pac Man on Arduino                                         |
+/^---------------------------------------------------------------------------*/
+/*Track state of pac-man actor.*/
 #include "pacMan.h"
 #include "global.h"
+
 PacMan::PacMan()
 {
     obj.pos.x = 14.0f; // Col
@@ -9,14 +17,17 @@ PacMan::PacMan()
     dirQue = LEFT;
 }
 
+// check that given tile is a valid area for pac-man to move
 bool PacMan::isValid(int row, int col)
 {
     int tile = myMap.mapLayout[row][col];
-    return (tile != 0 && tile != 4);
+    return (tile != MapData::wall && tile != MapData::nonPlayArea);
 }
 
+// Modifies pac-man state for movement, power-pellet consumption, or
+// dot consumption.
 void PacMan::action()
-{
+{   
     int inDir = con.getDirection();
     float col = obj.pos.x;
     float row = obj.pos.y;
@@ -129,8 +140,4 @@ void PacMan::action()
             break;
         }
     }
-
-    // turn off powerful if time elapsed
-    
-    // Serial.println("X: " + String(obj.pos.x) + "Y: " + String(obj.pos.x));
 }

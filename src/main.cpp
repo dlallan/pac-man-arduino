@@ -226,7 +226,7 @@ void checkGhost(Ghost &g)
 {
   // pac-man and ghost are in a fight to the death,
   // and only one can survive...
-  if (touching(pac.draw().pos,g.draw().pos))
+  if (CoordinatesF::touching(pac.draw().pos, g.draw().pos))
   {
     // ghost kills pac-man :(
     if (g.getCurrentMode() != mode::Frightened)

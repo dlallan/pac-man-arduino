@@ -13,15 +13,16 @@
 #include "pacMan.h"
 #include "ghost.h"
 
+// globals for player controls, game map, and overall game state
 extern Controller con;
 extern MapData myMap;
 extern Game game; 
+
+// game actors
 extern PacMan pac;
 extern Ghost red;
 extern Ghost pink;
 extern Ghost blue;
 extern Ghost orange;
-extern bool touching(CoordinatesF a, CoordinatesF b);
-
 
 #endif

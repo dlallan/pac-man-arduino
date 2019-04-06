@@ -28,5 +28,10 @@ struct CoordinatesF {
    else
       return false;
    }
+
+   // check if coordinates overlap within a small margin
+   static bool touching(CoordinatesF a, CoordinatesF b) {
+      return (fabs(a.x-b.x) < 0.5 && fabs(a.y-b.y) < 0.5);
+   }
 };
 #endif
