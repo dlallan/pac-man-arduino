@@ -1,12 +1,19 @@
+/*---------------------------------------------------------------------------^/
+ | Names: Dillon Allan and Amir Hansen                                       |
+ | ID: 0000000 and 0000001                                                   |
+ | CMPUT 275, Winter 2019                                                    | 
+ | Final Project: Pac Man on Arduino                                         |
+/^---------------------------------------------------------------------------*/
+/*Track state of ghosts in Pac-Man*/
 #include "ghost.h"
 #include "global.h"
 #include "BFS.h"
 
-// ctor for ghosts with initial position and other stats
+
 Ghost::Ghost(float row, float col, float spd,int dir,int err)
 {
-    obj.pos.x = col; // Col
-    obj.pos.y = row; // Row
+    obj.pos.x = col;
+    obj.pos.y = row;
     obj.speed = spd;
     obj.dir = dir;
     errorChance = err;
@@ -19,43 +26,44 @@ void Ghost::action() {
         lastTile = currentTile;
         currentTile.x = near(obj.pos.x);
         currentTile.y = near(obj.pos.y);
+        
+        // ghost direction can change if at an intersection
         if (atIntersection()) {
             CoordinatesF pacPosF = pac.draw().pos;
-            if (random(0,1000)>errorChance && currentMode == mode::Chase && !(near(pacPosF.x) == near(obj.pos.x) && near(pacPosF.y) == near(obj.pos.y) )) {
-                // get next tile from pac-man's current position
-                //CoordinatesF pacPosF = pac.draw().pos;
-                setTargetTile({near(pacPosF.x), near(pacPosF.y)}); // row, col pair!
+            // if no error, ghost should chase pac-man
+            if (random(0,1000)>errorChance && currentMode == mode::Chase && 
+                !(near(pacPosF.x) == near(obj.pos.x) && 
+                near(pacPosF.y) == near(obj.pos.y) )) {
                 
-                // use BFS search to get next tile in min-path
-                // Coordinates myPos = {near(obj.pos.x), near(obj.pos.y)};
+                // get next tile from pac-man's current position
+                // (row, col pair!)
+                setTargetTile({near(pacPosF.x), near(pacPosF.y)}); 
+                
+                // use BFS search to get next tile in min-path.
                 // BFS uses row col pairs, so swap x and y as needed
                 Coordinates nextTile = BFS({currentTile.y, currentTile.x}, 
                     {targetTile.y, targetTile.x});
                 nextTile = {nextTile.y, nextTile.x};
-                // bool invalid = false;
-                // set new direction for ghost
-
+                
+                // set new direction for ghost (allowed to reverse direction)
                 if (nextTile.x > currentTile.x) {
                     obj.dir = RIGHT;
-                //   invalid = !isValid(currentTile.y,currentTile.x+1);
                 }
                 else if (nextTile.x < currentTile.x) {
                     obj.dir = LEFT;
-                //    invalid = !isValid(currentTile.y,currentTile.x-1);
                 }
                 else if (nextTile.y > currentTile.y) {
                     obj.dir = DOWN;
-                //    invalid = !isValid(currentTile.y+1,currentTile.x);
                 }
                 else if (nextTile.y < currentTile.y) {
                     obj.dir = UP;
-                //    invalid = !isValid(currentTile.y-1,currentTile.x);
                 }
             }
             else if (currentMode == mode::Frightened) {
                 // get a pseudorandom direction
                 randomPath();           
             }
+            // ghost should scatter
             else
             {
                 randomPath();   
@@ -69,100 +77,102 @@ void Ghost::action() {
     moveForward(); // keep moving to next tile in current direction
 }
 
-
 void Ghost::randomPath()
 {
     int row = near(obj.pos.y);
     int col = near(obj.pos.x);
+    
+    // get random new direction
     int ran = random(0,1000)%4;
-    // Serial.println("Dir: " + String(ran));
-    switch (ran)
-    {
-    case UP:
-        if (isValid(row - 1, col))
-        {
-            obj.dir = UP;
-        }
-        else if (isValid(row, col - 1))
-        {
-            obj.dir = LEFT;
-        }
-        else if (isValid(row + 1, col))
-        {
-            obj.dir = DOWN;
-        }
-        else if (isValid(row, col + 1))
-        {
-            obj.dir = RIGHT;
-        }
-        break;
-    case DOWN:
-        if (isValid(row + 1, col))
-        {
-            obj.dir = DOWN;
-        }
-        else if (isValid(row, col + 1))
-        {
-            obj.dir = RIGHT;
-        }
-        else if (isValid(row - 1, col))
-        {
-            obj.dir = UP;
-        }
-        else if (isValid(row, col - 1))
-        {
-            obj.dir = LEFT;
-        }
-        break;
-    case LEFT:
-        if (isValid(row, col - 1))
-        {
-            obj.dir = LEFT;
-        }
-        else if (isValid(row + 1, col))
-        {
-            obj.dir = DOWN;
-        }
-        else if (isValid(row, col + 1))
-        {
-            obj.dir = RIGHT;
-        }
-        else if (isValid(row - 1, col))
-        {
-            obj.dir = UP;
-        }
-        
-        
-        break;
-    case RIGHT:
-        if (isValid(row, col + 1))
-        {
-            obj.dir = RIGHT;
-        }
-        else if (isValid(row - 1, col))
-        {
-            obj.dir = UP;
-        }
-        else if (isValid(row, col - 1))
-        {
-            obj.dir = LEFT;
-        }
-        else if (isValid(row + 1, col))
-        {
-            obj.dir = DOWN;
-        }
-        
-        break;
+    switch (ran) {
+        case UP:
+            if (isValid(row - 1, col))
+            {
+                obj.dir = UP;
+            }
+            else if (isValid(row, col - 1))
+            {
+                obj.dir = LEFT;
+            }
+            else if (isValid(row + 1, col))
+            {
+                obj.dir = DOWN;
+            }
+            else if (isValid(row, col + 1))
+            {
+                obj.dir = RIGHT;
+            }
+
+            break;
+
+        case DOWN:
+            if (isValid(row + 1, col))
+            {
+                obj.dir = DOWN;
+            }
+            else if (isValid(row, col + 1))
+            {
+                obj.dir = RIGHT;
+            }
+            else if (isValid(row - 1, col))
+            {
+                obj.dir = UP;
+            }
+            else if (isValid(row, col - 1))
+            {
+                obj.dir = LEFT;
+            }
+
+            break;
+
+        case LEFT:
+            if (isValid(row, col - 1))
+            {
+                obj.dir = LEFT;
+            }
+            else if (isValid(row + 1, col))
+            {
+                obj.dir = DOWN;
+            }
+            else if (isValid(row, col + 1))
+            {
+                obj.dir = RIGHT;
+            }
+            else if (isValid(row - 1, col))
+            {
+                obj.dir = UP;
+            }
+            
+            break;
+
+        case RIGHT:
+            if (isValid(row, col + 1))
+            {
+                obj.dir = RIGHT;
+            }
+            else if (isValid(row - 1, col))
+            {
+                obj.dir = UP;
+            }
+            else if (isValid(row, col - 1))
+            {
+                obj.dir = LEFT;
+            }
+            else if (isValid(row + 1, col))
+            {
+                obj.dir = DOWN;
+            }
+            
+            break;
     }
 }
 
 
 void Ghost::followPath()
 {
+    // continue down path (not allowed to reverse direction)
     int row = near(obj.pos.y);
     int col = near(obj.pos.x);
-
-
     if (obj.dir != UP && isValid(row + 1, col))
     {
         obj.dir = DOWN;
@@ -181,8 +191,9 @@ void Ghost::followPath()
     }
 }
 
+
 void Ghost::moveForward() {
-    
+    // move down path in current direction
     switch (obj.dir)
     {
     case UP:

@@ -37,6 +37,7 @@ int colNum[] = {0, 1, -1, 0};
 
 Coordinates BFS(Coordinates src, Coordinates dest) 
 { 
+    // track where we've been
     bool visited[Y_BOUND][X_BOUND]; 
     memset(visited, false, sizeof visited); 
       

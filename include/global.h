@@ -5,7 +5,6 @@
 #include "game.h"
 #include "pacMan.h"
 #include "ghost.h"
-#include "RedGhost.h"
 
 extern Controller con;
 extern MapData myMap;

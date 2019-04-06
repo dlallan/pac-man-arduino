@@ -3,7 +3,6 @@
 #include "game.h"
 #include "pacMan.h"
 #include "ghost.h"
-#include "RedGhost.h"
 #include <arduino.h>
 Controller con;
 MapData myMap;
