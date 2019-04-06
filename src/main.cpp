@@ -4,6 +4,7 @@
  | CMPUT 275, Winter 2019                                                    | 
  | Final Project: Pac Man on Arduino                                         |
 /^---------------------------------------------------------------------------*/
+/*Main program with helpers for high-level game logic.*/
 #include <shared.h>
 #include "global.h"
 

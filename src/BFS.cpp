@@ -1,10 +1,17 @@
+/*---------------------------------------------------------------------------^/
+ | Names: Dillon Allan and Amir Hansen                                       |
+ | ID: 0000000 and 0000001                                                   |
+ | CMPUT 275, Winter 2019                                                    | 
+ | Final Project: Pac Man on Arduino                                         |
+/^---------------------------------------------------------------------------*/
+/*Bread-first Search (BFS) implementation for ghost movement/tracking Pac-Man */
 // source: https://www.geeksforgeeks.org/shortest-path-in-a-binary-maze/
 // with modifications made by us for this project.
 #include "BFS.h"
 #include "global.h"
 #include <Arduino.h>
 #include "gameConfig.h"
-#include "linked_list.h"
+#include "linked_list.h" // given in class
 
 // A Data Structure for queue used in BFS 
 struct queueNode 
@@ -98,8 +105,7 @@ Coordinates BFS(Coordinates src, Coordinates dest)
         } 
     } 
     
-    // ASSUME PATH IS ALWAYS REACHABLE FOR PAC-MAN
-    // // Return -1 if destination cannot be reached 
-    // return -1; 
+    // We shouldn't get here for an empty path.
+    // Return impossible value.
     return {0, 0};
 } 
