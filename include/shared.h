@@ -20,6 +20,7 @@
 #include "gameConfig.h"
 #include "coordinates.h"
 #include "global.h"
+#include "mapData.h"
 
 /// struct and class definitions
 
@@ -56,14 +57,6 @@ struct InfoBarData {
 
 // contains properties of game map
 struct DrawMap {
-  static enum {
-      wall = 0,
-      dot = 1, // small item
-      powerPellet = 2, // large item/powerup
-      barePath = 3,
-      nonPlayArea = 4 // same color as bare path (e.g. inside ghost box)
-  } mapStates;
-
   static const int8_t mapWidth = X_BOUND; // map width in tiles
   static const int8_t mapHeight = Y_BOUND; // map height in tiles
 
@@ -318,20 +311,20 @@ class LivesBar {
 /* static */void DrawMap::drawTile(PDQ_ILI9341 * tft, int8_t r, 
   int8_t c) {
     switch (myMap.mapLayout[r][c]) {
-        case barePath: // draw same color in both cases
-        case nonPlayArea:
+        case MapData::barePath: // draw same color in both cases
+        case MapData::nonPlayArea:
           drawPath(tft, mapStartX + c*tileSize, 
               mapStartY + r*tileSize);
           break;
 
-        case dot: // draw dot on tile
+        case MapData::dot: // draw dot on tile
           drawPath(tft, mapStartX + c*tileSize, 
               mapStartY + r*tileSize);
           drawDot(tft, mapStartX + c*tileSize, 
               mapStartY + r*tileSize);
           break;
 
-        case powerPellet: // draw power pellet on tile 
+        case MapData::powerPellet: // draw power pellet on tile 
           drawPath(tft, mapStartX + c*tileSize, 
               mapStartY + r*tileSize);
           drawPowerPellet(tft, mapStartX + c*tileSize, 

@@ -1,7 +1,15 @@
+/*---------------------------------------------------------------------------^/
+ | Names: Dillon Allan and Amir Hansen                                       |
+ | ID: 0000000 and 0000001                                                   |
+ | CMPUT 275, Winter 2019                                                    | 
+ | Final Project: Pac Man on Arduino                                         |
+/^---------------------------------------------------------------------------*/
+/*Track state of game controller*/
 #include <arduino.h>
 #include "controller.h"
 #include "pinout.h"
 #include "gameConfig.h"
+
 Controller::Controller()
 {
     pinMode(VRx, INPUT);        // x joystick
@@ -20,11 +28,11 @@ int Controller::getDirection()
 
     if (magnitude > DEAD_ZONE)
     {
-        angle = atan2(-joyY,joyX)*(180.0/PI);
         // Up 45 to 135
         // Down -45 to -135
         // Right -45 to 45
         // Left <-135 or > 135
+        angle = atan2(-joyY,joyX)*(180.0/PI);
         if (angle >= 45 && angle <= 135)
         {
             return UP;
