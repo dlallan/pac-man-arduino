@@ -8,11 +8,11 @@
 #include "global.h"
 
 PDQ_ILI9341 tft; 	// AF: create LCD object (HW SPI, CS=pin 10, D/C=pin 8, reset=9)
-bool run = true;
-
 
 // cast of the game
 PacManShape pacShape; // our hero
+
+// the bad guys
 GhostShape redShape(GhostData::redInitialPos, GhostData::redColor);
 GhostShape blueShape(GhostData::blueInitialPos, GhostData::blueColor);
 GhostShape pinkShape(GhostData::pinkInitialPos, GhostData::pinkColor);
@@ -43,10 +43,12 @@ void updateScore() {
   ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos, game.getScore());
 }
 
+// update lives count on-screen
 void updateLives() {
   LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, game.getRemainingLives());
 }
 
+// update ghost based on pac-man's current state
 void runGhost(Ghost &g)
 {
   if (pac.powerful == 1) {
@@ -60,14 +62,15 @@ void runGhost(Ghost &g)
 
 // update state of the four ghosts
 void updateGhosts(){
-  // check if pac-man state has changed
   runGhost(red);
   runGhost(pink);
   runGhost(blue);
   runGhost(orange);
 }
 
-// toggles ghost color if in last moments of power pellet effect duration
+// toggles ghost color if in last moments of power pellet effect duration.
+// returns true if ghost is transitioning from Frightened to Chase mode soon.
+// returns false otherwise.
 bool tryFrightenedToggle(GhostShape * gs) {
   if (millis() - pac.powerTimeStart >= 2*PacMan::powerTimeDuration/3) {
     gs->frightenedToggle = !gs->frightenedToggle;
@@ -76,118 +79,46 @@ bool tryFrightenedToggle(GhostShape * gs) {
   return false;
 }
 
-void drawRed(){
+// Draw red ghost based on current mode and position.
+void drawGhost(Ghost & g, GhostShape * gp){
+  // convert tile coords to display coords (in pixels)
   Coordinates cord;
-  cord.x = red.draw().pos.x*SCALE + SCALE + 2;
-  cord.y = red.draw().pos.y*SCALE + 4*SCALE + 1;
-  redShapeP->setPosition(cord);
-  if (red.getCurrentMode() == mode::Frightened) {
-    if (tryFrightenedToggle(redShapeP)) redShapeP->drawTogglingGhost(&tft);
-    else redShapeP->drawPanickedGhost(&tft);
+  cord.x = g.draw().pos.x*SCALE + SCALE + 2;
+  cord.y = g.draw().pos.y*SCALE + 4*SCALE + 1;
+  gp->setPosition(cord);
+
+  // ghost should "blink" before returning to normal mode
+  if (g.getCurrentMode() == mode::Frightened) {
+    if (tryFrightenedToggle(gp)) gp->drawTogglingGhost(&tft);
+    else gp->drawPanickedGhost(&tft);
   }
   else {
-    redShapeP->drawShape(&tft);
+    gp->drawShape(&tft);
   }
-  int c = red.lastTile.x;
-  int r = red.lastTile.y;
+
+  // redraw previous tile 
+  int c = g.lastTile.x;
+  int r = g.lastTile.y;
   int t = myMap.mapLayout[r][c];
-  if (t == 1)
+  // draw either dot or power pellet
+  if (t == MapData::dot)
   {
     DrawMap::drawDot(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
               DrawMap::mapStartY + r*DrawMap::tileSize);
   }
-  else if (t == 2)
+  else if (t == MapData::powerPellet)
   {
     DrawMap::drawPowerPellet(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
               DrawMap::mapStartY + r*DrawMap::tileSize);
   }
 }
 
-void drawBlue(){
-  Coordinates cord;
-  cord.x = blue.draw().pos.x*SCALE + SCALE + 2;
-  cord.y = blue.draw().pos.y*SCALE + 4*SCALE + 1;
-  blueShapeP->setPosition(cord);
-  if (blue.getCurrentMode() == mode::Frightened) {
-    if (tryFrightenedToggle(blueShapeP)) blueShapeP->drawTogglingGhost(&tft);
-    else blueShapeP->drawPanickedGhost(&tft);  }
-  else {
-    blueShapeP->drawShape(&tft);
-  }
-  int c = blue.lastTile.x;
-  int r = blue.lastTile.y;
-  int t = myMap.mapLayout[r][c];
-  if (t == 1)
-  {
-    DrawMap::drawDot(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
-              DrawMap::mapStartY + r*DrawMap::tileSize);
-  }
-  else if (t == 2)
-  {
-    DrawMap::drawPowerPellet(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
-              DrawMap::mapStartY + r*DrawMap::tileSize);
-  }
-}
-
-void drawPink(){
-  Coordinates cord;
-  cord.x = pink.draw().pos.x*SCALE + SCALE + 2;
-  cord.y = pink.draw().pos.y*SCALE + 4*SCALE + 1;
-  pinkShapeP->setPosition(cord);
-  if (pink.getCurrentMode() == mode::Frightened) {
-    if (tryFrightenedToggle(pinkShapeP)) pinkShapeP->drawTogglingGhost(&tft);
-    else pinkShapeP->drawPanickedGhost(&tft);
-  }
-  else {
-    pinkShapeP->drawShape(&tft);
-  }
-  int c = pink.lastTile.x;
-  int r = pink.lastTile.y;
-  int t = myMap.mapLayout[r][c];
-  if (t == 1)
-  {
-    DrawMap::drawDot(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
-              DrawMap::mapStartY + r*DrawMap::tileSize);
-  }
-  else if (t == 2)
-  {
-    DrawMap::drawPowerPellet(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
-              DrawMap::mapStartY + r*DrawMap::tileSize);
-  }
-}
-
-void drawOrange(){
-  Coordinates cord;
-  cord.x = orange.draw().pos.x*SCALE + SCALE + 2;
-  cord.y = orange.draw().pos.y*SCALE + 4*SCALE + 1;
-  orangeShapeP->setPosition(cord);
-  if (orange.getCurrentMode() == mode::Frightened) {
-    if (tryFrightenedToggle(orangeShapeP)) orangeShapeP->drawTogglingGhost(&tft);
-    else orangeShapeP->drawPanickedGhost(&tft);
-  }
-  else {
-    orangeShapeP->drawShape(&tft);
-  }
-  int c = orange.lastTile.x;
-  int r = orange.lastTile.y;
-  int t = myMap.mapLayout[r][c];
-  if (t == 1)
-  {
-    DrawMap::drawDot(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
-              DrawMap::mapStartY + r*DrawMap::tileSize);
-  }
-  else if (t == 2)
-  {
-    DrawMap::drawPowerPellet(&tft, DrawMap::mapStartX + c*DrawMap::tileSize, 
-              DrawMap::mapStartY + r*DrawMap::tileSize);
-  }
-}
-
+// draw the ghosts on-screen
 void drawGhosts() {
-  drawRed();
-  drawBlue();
-  drawPink();
-  drawOrange();
+  drawGhost(red, redShapeP);
+  drawGhost(blue, blueShapeP);
+  drawGhost(pink, pinkShapeP);
+  drawGhost(orange, orangeShapeP);
 }
 
 // update state of PacMan
@@ -199,7 +130,9 @@ void updatePacMan() {
   pac.action();
 }
 
+// draw pac-man on-screen
 void drawPacMan() {
+  // convert tile position to display position in pixels
   Coordinates cord;
   cord.x = pac.draw().pos.x*SCALE + SCALE + 2;
   cord.y = pac.draw().pos.y*SCALE + 4*SCALE + 1;
@@ -207,11 +140,13 @@ void drawPacMan() {
   pacShapeP->drawShape(&tft);
 }
 
+// draw score bar (label and value) on-screen
 void drawScoreBar() {
   ScoreBar::drawLabel(&tft, InfoBarData::topBarLabelPos, InfoBarData::scoreLabel);
   ScoreBar::drawScore(&tft, InfoBarData::topBarValuePos, game.getScore());
 }
 
+// draw remaining lives bar (label and value) on-screen
 void drawLivesBar() {
   LivesBar::drawLabel(&tft, InfoBarData::bottomBarLabelPos, InfoBarData::livesLabel);
   LivesBar::drawLives(&tft, InfoBarData::bottomBarValuePos, game.getRemainingLives());
@@ -221,18 +156,18 @@ void drawLivesBar() {
 // and restart game from initial state
 void restart() {
   // initialize state variables
-  game = Game(3);
+  game = Game(3); // start with 3 lives
   Controller con;
   myMap = MapData();
   pac = PacMan();
   red = Ghost(13.0f,11.0f,0.1f,DOWN,0);  //0 -> never makes a wrong turn
-  pink = Ghost(15.0f,16.0f,0.125f,UP,300);   
+  pink = Ghost(15.0f,16.0f,0.125f,UP,300);  // 30% error rate
   blue = Ghost(15.0f,11.0f,0.125f,RIGHT,200); // makes a wrong turn 20.0% of the time
-  orange = Ghost(13.0f,16.0f,0.125f,LEFT,100);
+  orange = Ghost(13.0f,16.0f,0.125f,LEFT,100); // 100% error rate --> ghost is unpredictable
 
 
-  // initialize our crew
-  pacShape = PacManShape(); // our hero
+  // initialize our shapes
+  pacShape = PacManShape();
   redShape = GhostShape(GhostData::redInitialPos, GhostData::redColor);
   blueShape = GhostShape(GhostData::blueInitialPos, GhostData::blueColor);
   pinkShape = GhostShape(GhostData::pinkInitialPos, GhostData::pinkColor);
@@ -263,16 +198,13 @@ void restart() {
   drawScoreBar();
   drawLivesBar();
 
-  delay(2000); // give the player some breathing room
+  delay(2000); // give the player a short pause before game begins
 }
 
 
 // initialize our game variables
 void setup() {
   init();               // Arduino initialization
-  /* The final product doesnt need serial com's its just going to be useful 
-     for debugging */
-  // Serial.begin(9600);   // Start serial session at 9600 baud rate
   randomSeed(analogRead(A7)); // get new seed every time (in theory)
   tft.begin();
   restart(); // initialize game state
@@ -413,8 +345,8 @@ bool running() {
 // program entry point
 int main() {
     setup();
-    while (running()); 
 
-    // Serial.end(); // just for debugging
+    while (running()); // game loop
+
     return 0;
 }
