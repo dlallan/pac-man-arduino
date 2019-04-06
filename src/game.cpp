@@ -1,10 +1,15 @@
+/*---------------------------------------------------------------------------^/
+ | Names: Dillon Allan and Amir Hansen                                       |
+ | ID: 0000000 and 0000001                                                   |
+ | CMPUT 275, Winter 2019                                                    | 
+ | Final Project: Pac Man on Arduino                                         |
+/^---------------------------------------------------------------------------*/
+/*Track state of game*/
 #include "game.h"
 
 Game::Game(int16_t lives /*= 3*/) {
     this->lives = lives;
 }
-
-Game::~Game() {}
 
 int16_t Game::getRemainingLives() {
     return lives;

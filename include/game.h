@@ -1,12 +1,20 @@
+/*---------------------------------------------------------------------------^/
+ | Names: Dillon Allan and Amir Hansen                                       |
+ | ID: 0000000 and 0000001                                                   |
+ | CMPUT 275, Winter 2019                                                    | 
+ | Final Project: Pac Man on Arduino                                         |
+/^---------------------------------------------------------------------------*/
+/*Track state of game*/
 #ifndef game_h
 #define game_h
 #include <Arduino.h>
 
+// Game state stored in instance of Game
 class Game {
     public:
         // start game with given number of lives
         Game(int16_t lives = 3);
-        ~Game();
+        ~Game() {};
 
         // check if out of lives or at max score
         bool isGameOver();
