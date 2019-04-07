@@ -7,7 +7,7 @@
 /*Track state of game map*/
 #ifndef MAPDATA_H
 #define MAPDATA_H
-#include <arduino.h>
+#include <Arduino.h>
 #include "gameConfig.h"
 #include "cleanMap.h"
 

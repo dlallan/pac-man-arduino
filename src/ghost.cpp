@@ -31,7 +31,7 @@ void Ghost::action() {
         if (atIntersection()) {
             CoordinatesF pacPosF = pac.draw().pos;
             // if no error, ghost should chase pac-man
-            if (random(0,1000)>errorChance && currentMode == mode::Chase && 
+            if (random(0,1000)>errorChance && currentMode == Chase && 
                 !(near(pacPosF.x) == near(obj.pos.x) && 
                 near(pacPosF.y) == near(obj.pos.y) )) {
                 
@@ -59,7 +59,7 @@ void Ghost::action() {
                     obj.dir = UP;
                 }
             }
-            else if (currentMode == mode::Frightened) {
+            else if (currentMode == Frightened) {
                 // get a pseudorandom direction
                 randomPath();           
             }
@@ -212,10 +212,10 @@ void Ghost::moveForward() {
 }
 
 bool Ghost::getFrightened() {
-    return currentMode == mode::Frightened;
+    return currentMode == Frightened;
 }
 
-void Ghost::setCurrentMode(mode m) {
+void Ghost::setCurrentMode(int m) {
     currentMode = m;
 }
 

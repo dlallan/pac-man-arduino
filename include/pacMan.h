@@ -7,7 +7,7 @@
 /*Track state of pac-man actor.*/
 #ifndef PACMAN_H
 #define PACMAN_H
-#include <arduino.h>
+#include <Arduino.h>
 #include "actor.h"
 #include "coordinates.h"
 

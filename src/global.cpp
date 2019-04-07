@@ -10,7 +10,7 @@
 #include "game.h"
 #include "pacMan.h"
 #include "ghost.h"
-#include <arduino.h>
+#include <Arduino.h>
 Controller con;
 MapData myMap;
 Game game(3); // 3 lives...

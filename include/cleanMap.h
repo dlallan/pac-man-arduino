@@ -7,7 +7,7 @@
 // default state of each tile in game map
 #ifndef CLEANMAP_H
 #define CLEANMAP_H
-#include <arduino.h>
+#include <Arduino.h>
 #include "gameConfig.h"
 
 const uint8_t blankMap[][X_BOUND] = { 

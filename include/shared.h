@@ -13,9 +13,9 @@
 
 #include <Arduino.h>
 #include <SPI.h>				            // must include this here (or else IDE can't find it)
-#include <PDQ_GFX.h>		            // AF: Core graphics library
+#include "PDQ_GFX.h"		            // AF: Core graphics library
 #include "PDQ_ILI9341_config.h"			// PDQ: ILI9341 pins and other setup for this sketch
-#include <PDQ_ILI9341.h>		        // AF: Hardware-specific library
+#include "PDQ_ILI9341.h"		        // AF: Hardware-specific library
 #include "cleanMap.h"
 #include "gameConfig.h"
 #include "coordinates.h"

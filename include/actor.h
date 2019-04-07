@@ -7,7 +7,7 @@
 /*Base class for game actors (ghosts and pac-man).*/
 #ifndef actor_h
 #define actor_h
-#include <arduino.h>
+#include <Arduino.h>
 #include "coordinates.h"
 
 // pass this between objects in game for state comparisons

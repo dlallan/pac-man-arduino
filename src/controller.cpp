@@ -5,7 +5,7 @@
  | Final Project: Pac Man on Arduino                                         |
 /^---------------------------------------------------------------------------*/
 /*Track state of game controller*/
-#include <arduino.h>
+#include <Arduino.h>
 #include "controller.h"
 #include "pinout.h"
 #include "gameConfig.h"

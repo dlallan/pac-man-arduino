@@ -5,23 +5,6 @@
 
 using namespace std;
 
-/*
-  Practice problems:
-    - implement insertBack()
-
-    - implement insertAfter(), which is like insertBefore() except the item
-      should appear after the one you insert
-
-      HINT: Do you really need to juggle pointers or can you do it using
-      the functions that already exist?
-
-    - implement a method remove(const T& item) that will remove the first
-      occurrence of the item in the list
-
-    - implement a method removeAll(const T& item) that will remove all
-      occurrences of the item in the list in O(n) time
-*/
-
 // struct for holding an item and pointers to the next and previous node
 template <class T>
 struct ListNode {

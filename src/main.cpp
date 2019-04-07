@@ -53,10 +53,10 @@ void updateLives() {
 void runGhost(Ghost &g)
 {
   if (pac.powerful == 1) {
-    g.setCurrentMode(mode::Frightened);
+    g.setCurrentMode(Frightened);
   }
-  else if (pac.powerful == 0 && g.getCurrentMode() != mode::Chase) {
-    g.setCurrentMode(mode::Chase);
+  else if (pac.powerful == 0 && g.getCurrentMode() != Chase) {
+    g.setCurrentMode(Chase);
   }
   g.action();
 }
@@ -89,7 +89,7 @@ void drawGhost(Ghost & g, GhostShape * gp){
   gp->setPosition(cord);
 
   // ghost should "blink" before returning to normal mode
-  if (g.getCurrentMode() == mode::Frightened) {
+  if (g.getCurrentMode() == Frightened) {
     if (tryFrightenedToggle(gp)) gp->drawTogglingGhost(&tft);
     else gp->drawPanickedGhost(&tft);
   }
@@ -229,7 +229,7 @@ void checkGhost(Ghost &g)
   if (CoordinatesF::touching(pac.draw().pos, g.draw().pos))
   {
     // ghost kills pac-man :(
-    if (g.getCurrentMode() != mode::Frightened)
+    if (g.getCurrentMode() != Frightened)
     {
       delay(Game::deathDelay); // give player time to react
       goHome();
@@ -242,7 +242,7 @@ void checkGhost(Ghost &g)
     else
     {
       g.tpTo(13.0f,12.0f,LEFT); 
-      g.setCurrentMode(mode::Chase);
+      g.setCurrentMode(Chase);
     }
   }
 }

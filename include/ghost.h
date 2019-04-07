@@ -12,7 +12,7 @@
 #include "gameConfig.h"
 
 // movement modes for all ghosts
-enum class mode {
+enum mode {
     Scatter, // separate from other ghosts
     Chase,   // hunt pac-man
     Frightened // flee from pac-man (and turn blue)
@@ -32,8 +32,8 @@ class Ghost : public Actor {
         bool getFrightened();
 
         // set value of currentMode member
-        void setCurrentMode(mode m);
-        mode getCurrentMode() { return currentMode; }
+        void setCurrentMode(int m);
+        int getCurrentMode() { return currentMode; }
 
         // check if tile is valid for ghost movement
         bool isValid(int16_t row, int16_t col);
@@ -63,7 +63,7 @@ class Ghost : public Actor {
 
         // determines movement style of ghost
         // (chase is default)
-        mode currentMode = mode::Chase;
+        int currentMode = Chase;
         int rowNum[4] = {-1, 0, 0, 1}; 
         int colNum[4] = {0, 1, -1, 0};
 
