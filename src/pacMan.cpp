@@ -10,16 +10,17 @@
 
 PacMan::PacMan()
 {
-    obj.pos.x = 14.0f; // Col
-    obj.pos.y = 23.0f; // Row
-    obj.dir = LEFT;
-    obj.speed = 0.125; // Do everything wrt having things sum to 1.0 nice
-    dirQue = LEFT;
+    obj.pos.x = 14.0f;  // Col
+    obj.pos.y = 23.0f;  // Row
+    obj.dir = LEFT;     // Starting direction
+    obj.speed = 0.125;  // Do everything wrt having things sum to 1.0 nice
+    dirQue = LEFT;      // Queue up turning left (The queue can be overwritten)
 }
 
 // check that given tile is a valid area for pac-man to move
 bool PacMan::isValid(int row, int col)
 {
+    // Check if a given row/col is a valid tile for walking on
     int tile = myMap.mapLayout[row][col];
     return (tile != MapData::wall && tile != MapData::nonPlayArea);
 }
@@ -27,22 +28,28 @@ bool PacMan::isValid(int row, int col)
 // Modifies pac-man state for movement, power-pellet consumption, or
 // dot consumption.
 void PacMan::action()
-{   
-    int inDir = con.getDirection();
-    float col = obj.pos.x;
-    float row = obj.pos.y;
+{
+    // Process pacmans actions
+    int inDir = con.getDirection(); // Read the controllers input
+    float col = obj.pos.x;  // Read pacmans x/col pos
+    float row = obj.pos.y;  // Read pacmans y/row pos
+
     if (inDir != NEUTRAL)
-    {
+    {   
+        // When the stick is being used get its direction
         dirQue = inDir;
     }
+
     if (millis() - powerTimeStart >= powerTimeDuration) {
+        // Check if pacman should no longer be powerfull
         powerful = 0;
     }
     else
     {
+        // Waiting for pacman to lose his power/ unable to eat ghosts
         powerful = 2;
     }
-    // check if pac-man is on a single tile
+    // check if pac-man is in the centre of a tile
     if (isWhole(obj.pos.x) && isWhole(obj.pos.y))
     {   
         // try moving in the requested direction
@@ -126,6 +133,7 @@ void PacMan::action()
     {
         switch (obj.dir)
         {
+        /* Move forward/in the objects direction */
         case UP:
             obj.pos.y -= obj.speed;
             break;
