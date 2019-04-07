@@ -1,58 +1,138 @@
 -----------------------------------------------------------
 Names: Amir Hansen & Dillon Allan
-ID: <Amir's ID here>, 1350542
+ID: 0000000, 0000001
 CMPUT 275, Winter 2019
 
 Final Project: Pac-Man Arduino
 -----------------------------------------------------------
 Included Files:
-    * Makefile
-    * README
+    > Makefile
+        ->  The make file provided in class for building projects for the
+            Arduino.
+
+    > README
+        -> This file that you are reading...
+
+    > Class Files
+        * actor.(h/cpp)
+        ->  The base actor object used to make pacMan and Ghosts. Contains
+            information about the objects postion and basic function for
+            manipulating the object.
+
+        * BFS.(h/cpp)
+        ->  Contains function for Bread-first Search. Is used by the ghosts to
+            to path find to pacman. Implementation based on using a 2d matrix
+            graph, where the cardinal direction with walkable tiles are edges.
+
+        * controller.(h/cpp)
+        ->  Used for reading the current inputs from the joystick, and button.
+
+        * game.(h/cpp)
+        ->  Tracks and manipulates important game information including score
+            and lives.
+
+        * ghost.(h/cpp)
+        ->  An object that will track pacman. The speed, and error rate of
+            this object can be adjusted.
+        ->  Uses Bread-first Search to find the fastest path to pacman. Error
+            rate will affect whether the ghost will follow this optimal path 
+            or not.
+
+        * global.(h/cpp)
+        ->  Used for instantiating globally used objects such as the game, map
+            and controller.
+
+        * pacMan.(h/cpp)
+        ->  Our hero, an object that can be manipulated by the player using the
+            joystick.
+        ->  Can eat the pellets in the maze to increase the game score, eating
+            the large pellets will make pacman powerful and will allow him to
+            eat the ghosts.
+        ->  Getting hit by a ghost that pacman is not powerful to will result 
+            in losing a life.
+
+    > Source File
+        * main.cpp
+        ->  All the objects in the game are used and ran here.
+        ->  Controls all the core game locic:
+            ->  Where to send object after different events such as eating a 
+                ghost, or losing a life.
+            ->  Taking the objects position and calculating where to draw them.
+            ->  Updating information that is important to the player including
+                lives, and score.
+
+
+    > Include Files
+        * cleanMap.h
+        ->  Contains the data for a clean/unused map.
+
+        * gameConfig.h
+        ->  Configuration for basic game information including map information,
+            colors, and input sensitivity.
+
+        * linked_list.h
+        ->  Was given in class earlier this semester. Used for our
+            implementation of Bread-first Search.
+        
+        * mapData.h
+        ->  Contains information on the map that is actively being used. This
+            map may be modified by any object as it is defined globally.
+
+        * PDQ_ILI9341_config.h
+        ->  Configuration for using the PDQ Libraries with the TFT display
+
+        * pinout.h
+        ->  Definitions for pins being used
+
+        * shared.h
+        ->  Contains all of the drawing logic. Drawing request are made to 
+            shared where it will draw the request to the display.
+
+    > Libraries
+        * Arduino.h
+        -> Needed for all Arduino projects
+        
+        * SPI.h
+        ->  Used for spi communication with the tft display
+        
+        * PDQ_GFX.h
+        ->  An optimized fork of the Adafruit GFX Libraries, allows for drawing
+            to the tft display.
+        
+        * PDQ_ILI9341.h
+        ->  An optimized fork of the Adafruit ILI9341 Libraries, needed for
+            using the ILI9341 display.
+    
+    * Additional information on each of the class/source/include files can
+      be found as comments documenting the functions/objects and their usage
+      directly in each file. 
 
 Accessories:
-    * Arduino Mega Board
-    * Breadboard
-    * USB cable
-    * Wires with pin connectors
-    * Adafruit ILI9341 Touchscreen Display 
-      (with SD card containing yeg pictures)
+    * Arduino Mega Board (Other boards may work with reconfigured pins)
+    * USB cable (For power and upload)
+    * Wires and breadboard (For connecting everything)
+    * Adafruit ILI9341 Touchscreen Display (Touchscreen not used)
     * Joystick
 
 Notes and Assumptions:
-    <Put program overview here.>
+    * The Accessories the user uses do not need any additional components such
+      as resistor to limit current flow to different components.
 
 Wiring Instructions:
-    <Just left as default wiring in class WITHOUT touch pins.>
-    <We could add touch pins or use joystick click for pause toggle?>
 
     TFT Display:
-
-        The display pins are numbered left to right in this document when they 
-        are being viewed with their labels showing rightside up. Note you do 
-        not require the touchscreen for this assignment, so it is probably a 
-        lot easier to not wire the Y+/X+/Y-/X- pins.
-
-        Display Pin     Arduino Mega Pin
-        1 GND           BB GND bus
-        2 Vin           BB Vcc (+ive) bus
-
-        4 CLK           Pin 52
-        5 MISO          Pin 50
-        6 MOSI          Pin 51
-        7 CS            Pin 10
-        8 D/C           Pin 9
-
-        19 CCS          Pin 6
-
-    Zoom in and out buttons:
-
-        Button          Arduino Mega Pin
-        Zoom In         Pin 2
-        Zoom Out        Pin 3
+       _Display Pin_   _Arduino Mega Pin_
+        GND             BB GND bus
+        Vin             BB Vcc (+ive) bus
+        CLK             Pin 52
+        MISO            Pin 50
+        MOSI            Pin 51
+        CS              Pin 10
+        D/C             Pin 9
+        CCS             Pin 6
 
     Joystick connections:
-
-        Joystick Pin    Arduino Mega Pin
+       _Joystick Pin_  _Arduino Mega Pin_
         +5v             Vcc
         GND             GND
         VRx             Analog 1
@@ -60,11 +140,25 @@ Wiring Instructions:
         SW              Pin 8
 
 Running Instructions:
-    <Put list of instructions here.>
+    From the CMPUT 274 virtual machine that has been provided, use make to
+    build the arduino project. With an arduino connected, use make upload to 
+    upload the program onto the arduino.
+
+    Once the program is flashed onto the arduino you will only need to connect
+    power to the arduino in order to run the program. The computer is no longer
+    needed.
+
+    The game will start shortly after being powered on. You control pacman
+    the yellow square in the centre near the bottom of the map. Move the
+    joystick to change the direction that pacman is moving in. Collecting
+    pellets will increase your score. Getting touched by ghosts will decrease
+    your lives - unless the ghost is blinking blue, in which case you will eat
+    the ghost and it will be sent back to the middle. To make the ghost blink
+    blue you must eat a power pellet (the larger pellet)
 
 References:
     linked_list.h was given in class earlier this semester. We used it in an
-    implementation of a BFS algorithm for the ghost pathfinding behavior.
+    implementation of a BFS algorithm for the ghost path finding behavior.
 
     Some joystick code was reused 
 
