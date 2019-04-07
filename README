@@ -140,7 +140,21 @@ Wiring Instructions:
         SW              Pin 8
 
 Running Instructions:
-    <Put list of instructions here.>
+    From the CMPUT 274 virtual machine that has been provided, use make to
+    build the arduino project. With an arduino connected, use make upload to 
+    upload the program onto the arduino.
+
+    Once the program is flashed onto the arduino you will only need to connect
+    power to the arduino in order to run the program. The computer is no longer
+    needed.
+
+    The game will start shortly after being powered on. You control pacman
+    the yellow square in the centre near the bottom of the map. Move the
+    joystick to change the direction that pacman is moving in. Collecting
+    pellets will increase your score. Getting touched by ghosts will decrease
+    your lives - unless the ghost is blinking blue, in which case you will eat
+    the ghost and it will be sent back to the middle. To make the ghost blink
+    blue you must eat a power pellet (the larger pellet)
 
 References:
     linked_list.h was given in class earlier this semester. We used it in an
