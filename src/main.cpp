@@ -5,7 +5,7 @@
  | Final Project: Pac Man on Arduino                                         |
 /^---------------------------------------------------------------------------*/
 /*Main program with helpers for high-level game logic.*/
-#include <shared.h>
+#include "shared.h"
 #include "global.h"
 
 PDQ_ILI9341 tft; 	// AF: create LCD object (HW SPI, CS=pin 10, D/C=pin 8, reset=9)
